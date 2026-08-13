@@ -32,21 +32,22 @@
                 <!-- Jenis Cuti -->
                 <div>
                     <label for="jenis_cuti" class="block text-sm font-semibold text-gray-700">Jenis Cuti <span class="text-red-500">*</span></label>
-                    <select id="jenis_cuti" name="jenis_cuti" required class="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-gray-50">
+                    <select id="jenis_cuti" name="jenis_cuti_id" required class="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-gray-50">
                         <option value="" disabled selected>Pilih jenis cuti...</option>
-                        <option value="Tahunan">Cuti Tahunan</option>
-                        <option value="Sakit">Cuti Sakit</option>
-                        <option value="Melahirkan">Cuti Melahirkan</option>
-                        <option value="Penting">Cuti Khusus</option>
+                        @foreach($jenisCutis as $jenis)
+                            <option value="{{ $jenis->id }}" data-nama="{{ strtolower($jenis->nama) }}">
+                                {{ $jenis->nama }}
+                            </option>
+                        @endforeach
                     </select>
                     <p class="mt-1 text-xs text-gray-400">Pilih kategori cuti yang sesuai dengan kebutuhan Anda.</p>
-                    <x-input-error :messages="$errors->get('jenis_cuti')" class="mt-1" />
+                    <x-input-error :messages="$errors->get('jenis_cuti_id')" class="mt-1" />
                 </div>
 
                 <!-- KOLOM TAMBAHAN: Cuti Khusus (Sembunyi secara default) -->
                 <div id="kolom_cuti_khusus" class="hidden bg-blue-50 p-4 rounded-lg border border-blue-100">
-                    <label for="keterangan_khusus" class="block text-sm font-semibold text-[#0b3c7c]">Detail Cuti Khusus <span class="text-red-500">*</span></label>
-                    <input type="text" id="keterangan_khusus" name="keterangan_khusus" placeholder="Misal: Menikah, Istri Melahirkan, Ada keluarga meninggal..." class="mt-2 block w-full py-3 px-4 border-gray-300 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-white">
+                    <label for="catatan" class="block text-sm font-semibold text-[#0b3c7c]">Detail Cuti Khusus <span class="text-red-500">*</span></label>
+                    <input type="text" id="catatan" name="catatan" placeholder="Misal: Menikah, Istri Melahirkan, Ada keluarga meninggal..." class="mt-2 block w-full py-3 px-4 border-gray-300 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-white">
                     <p class="mt-1 text-xs text-gray-500">Sebutkan secara spesifik keperluan cuti khusus Anda.</p>
                 </div>
 
@@ -72,12 +73,13 @@
                         </div>
                         <div>
                             <p class="text-xs text-gray-500 font-semibold">Estimasi Durasi</p>
-                            <p class="text-lg font-bold text-gray-900">- Hari</p>
+                            <!-- ID estimasi_durasi ditambahkan di sini -->
+                            <p id="estimasi_durasi" class="text-lg font-bold text-gray-900">- Hari</p>
                         </div>
                     </div>
                     <div class="text-right">
                         <p class="text-xs text-gray-500 font-semibold">Sisa Cuti Tahunan</p>
-                        <p class="text-lg font-bold text-[#0b3c7c]">{{ $sisaCuti }} Hari</p>
+                        <p class="text-lg font-bold text-[#0b3c7c]">{{ $sisaCuti ?? 0 }} Hari</p>
                     </div>
                 </div>
             </div>
@@ -102,7 +104,6 @@
 
                 <!-- Dokumen Pendukung -->
                 <div>
-                    <!-- Label ini akan berubah dinamis via JS -->
                     <label id="label_dokumen" class="block text-sm font-semibold text-gray-700 mb-2">Dokumen Pendukung (Opsional)</label>
                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:bg-gray-50 transition relative">
                         <div class="space-y-1 text-center">
@@ -110,9 +111,9 @@
                                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                             <div class="flex text-sm text-gray-600 justify-center">
-                                <label for="dokumen" class="relative cursor-pointer bg-white rounded-md font-medium text-[#0b3c7c] hover:text-blue-800 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#0b3c7c]">
+                                <label for="data_pendukung" class="relative cursor-pointer bg-white rounded-md font-medium text-[#0b3c7c] hover:text-blue-800 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#0b3c7c]">
                                     <span>Unggah File</span>
-                                    <input id="dokumen" name="dokumen" type="file" class="sr-only">
+                                    <input id="data_pendukung" name="data_pendukung" type="file" class="sr-only">
                                 </label>
                                 <p class="pl-1">atau seret dan lepas</p>
                             </div>
@@ -124,7 +125,7 @@
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         Wajib melampirkan Surat Keterangan Sakit dari Dokter!
                     </p>
-                    <x-input-error :messages="$errors->get('dokumen')" class="mt-1" />
+                    <x-input-error :messages="$errors->get('data_pendukung')" class="mt-1" />
                 </div>
             </div>
         </div>
@@ -142,45 +143,79 @@
     </form>
 </div>
 
-<!-- SCRIPT UNTUK LOGIKA FORM DINAMIS -->
+<!-- SCRIPT UNTUK LOGIKA FORM DINAMIS & PERHITUNGAN DURASI -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const jenisCuti = document.getElementById('jenis_cuti');
         
         // Element untuk Cuti Khusus
         const kolomKhusus = document.getElementById('kolom_cuti_khusus');
-        const inputKhusus = document.getElementById('keterangan_khusus');
+        const inputKhusus = document.getElementById('catatan');
         
         // Element untuk Dokumen Cuti Sakit
-        const dokumenInput = document.getElementById('dokumen');
+        const dokumenInput = document.getElementById('data_pendukung');
         const labelDokumen = document.getElementById('label_dokumen');
         const noteSakit = document.getElementById('note_sakit');
 
-        // Fungsi dijalankan setiap kali dropdown diganti
+        // Element untuk Durasi
+        const tglMulai = document.getElementById('tanggal_mulai');
+        const tglSelesai = document.getElementById('tanggal_selesai');
+        const estimasiDurasi = document.getElementById('estimasi_durasi');
+
+        // Fungsi Perubahan Dropdown Jenis Cuti
         jenisCuti.addEventListener('change', function() {
+            const selectedOptionName = this.options[this.selectedIndex].getAttribute('data-nama');
             
-            // 1. Logika untuk Cuti Khusus (value = Penting)
-            if (this.value === 'Penting') {
-                kolomKhusus.classList.remove('hidden'); // Tampilkan kolom
-                inputKhusus.setAttribute('required', 'required'); // Wajib diisi
+            if (selectedOptionName && (selectedOptionName.includes('khusus') || selectedOptionName.includes('penting'))) {
+                kolomKhusus.classList.remove('hidden'); 
+                inputKhusus.setAttribute('required', 'required'); 
             } else {
-                kolomKhusus.classList.add('hidden'); // Sembunyikan kolom
-                inputKhusus.removeAttribute('required'); // Lepas wajib diisi
-                inputKhusus.value = ''; // Kosongkan isinya
+                kolomKhusus.classList.add('hidden'); 
+                inputKhusus.removeAttribute('required'); 
+                inputKhusus.value = ''; 
             }
 
-            // 2. Logika untuk Cuti Sakit (value = Sakit)
-            if (this.value === 'Sakit') {
-                noteSakit.classList.remove('hidden'); // Munculkan tulisan merah
-                labelDokumen.innerHTML = 'Dokumen Pendukung <span class="text-red-500">*</span>'; // Ubah label jadi Wajib
-                dokumenInput.setAttribute('required', 'required'); // Memaksa user upload file
+            if (selectedOptionName && selectedOptionName.includes('sakit')) {
+                noteSakit.classList.remove('hidden'); 
+                labelDokumen.innerHTML = 'Dokumen Pendukung <span class="text-red-500">*</span>'; 
+                dokumenInput.setAttribute('required', 'required'); 
             } else {
-                noteSakit.classList.add('hidden'); // Sembunyikan tulisan merah
-                labelDokumen.innerHTML = 'Dokumen Pendukung (Opsional)'; // Kembalikan label opsional
-                dokumenInput.removeAttribute('required'); // Lepas wajib upload
+                noteSakit.classList.add('hidden'); 
+                labelDokumen.innerHTML = 'Dokumen Pendukung (Opsional)'; 
+                dokumenInput.removeAttribute('required'); 
             }
-            
         });
+
+        // Fungsi Hitung Durasi Otomatis
+        function hitungDurasi() {
+            if (tglMulai.value && tglSelesai.value) {
+                const start = new Date(tglMulai.value);
+                const end = new Date(tglSelesai.value);
+                
+                // Pastikan tanggal selesai tidak lebih kecil dari tanggal mulai
+                if (end >= start) {
+                    // Hitung selisih dalam milidetik, konversi ke hari, dan ditambah 1
+                    const diffTime = Math.abs(end - start);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+                    
+                    estimasiDurasi.innerText = diffDays + ' Hari';
+                    estimasiDurasi.classList.remove('text-red-500');
+                    estimasiDurasi.classList.add('text-gray-900');
+                } else {
+                    estimasiDurasi.innerText = 'Tidak Valid';
+                    estimasiDurasi.classList.remove('text-gray-900');
+                    estimasiDurasi.classList.add('text-red-500');
+                }
+            } else {
+                estimasiDurasi.innerText = '- Hari';
+                estimasiDurasi.classList.remove('text-red-500');
+                estimasiDurasi.classList.add('text-gray-900');
+            }
+        }
+
+        // Panggil fungsi setiap kali input tanggal diubah
+        tglMulai.addEventListener('change', hitungDurasi);
+        tglSelesai.addEventListener('change', hitungDurasi);
     });
 </script>
 @endsection
