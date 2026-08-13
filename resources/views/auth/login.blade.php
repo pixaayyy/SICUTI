@@ -7,120 +7,370 @@
 
     <title>SICUTI - Login</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Figtree', sans-serif;
+        }
+
+        body {
+            color: #111827;
+            background-color: #f8fafc;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .login-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        .left-panel {
+            display: none;
+            background-color: #0b3c7c;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+            color: white;
+            position: relative;
+        }
+
+        .bg-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4;
+            mix-blend-mode: multiply;
+        }
+
+        .panel-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .brand-center {
+            text-align: center;
+            margin-top: -80px;
+        }
+
+        .brand-center h1 {
+            font-size: 70px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .brand-center p {
+            font-size: 18px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-badge {
+            margin-top: 32px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .brand-badge p.title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .brand-badge p.sub {
+            font-size: 12px;
+            color: #bfdbfe;
+            margin-top: 4px;
+        }
+
+        .panel-footer {
+            position: relative;
+            z-index: 10;
+            font-size: 12px;
+            color: #bfdbfe;
+        }
+
+        .right-panel {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+            padding: 24px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .form-header h2 {
+            font-size: 30px;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .form-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f3f4f6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+            color: #9ca3af;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px 12px 44px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background-color: #f9fafb;
+            font-size: 14px;
+            color: #111827;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0b3c7c;
+            box-shadow: 0 0 0 3px rgba(11, 60, 124, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .checkbox-label input {
+            border-radius: 4px;
+            border: 1px solid #d1d5db;
+            color: #0b3c7c;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .forgot-link {
+            font-weight: 600;
+            color: #0b3c7c;
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            color: #1e40af;
+        }
+
+        .btn-submit {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #0b3c7c;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #082a5c;
+        }
+
+        .right-footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .right-footer a {
+            font-weight: 600;
+            color: #0b3c7c;
+            text-decoration: none;
+        }
+
+        .right-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 1024px) {
+            .left-panel {
+                display: flex;
+                width: 50%;
+            }
+            .right-panel {
+                width: 50%;
+                padding: 48px;
+            }
+        }
+    </style>
 </head>
-<body class="font-sans text-gray-900 antialiased overflow-hidden">
+<body>
     
-    <div class="min-h-screen flex">
-        
-        <!-- Sisi Kiri: Branding & Gambar Background -->
-        <div class="hidden lg:flex lg:w-1/2 relative bg-[#0b3c7c] flex-col justify-between p-10 text-white">
+    <div class="login-wrapper">        
+        <div class="left-panel">
             
-            <!-- Overlay Background Gambar -->
-            <div class="absolute inset-0 z-0">
-                <!-- Menggunakan inline style dan asset() agar spasi pada nama file terdeteksi dengan aman -->
-                <div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-multiply" 
-                     style="background-image: url('{{ asset('images/foto perusahaan.jpeg') }}');">
-                </div>
+            <div class="bg-overlay">
+                <div class="bg-image" style="background-image: url('{{ asset('images/foto perusahaan.jpeg') }}');"></div>
             </div>
 
-            <!-- Konten Sisi Kiri -->
-            <div class="relative z-10 flex items-center gap-2 text-sm font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+            <div class="panel-content brand-top">
+                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                 PT Trisaka Kopkarsentra Utama
             </div>
             
-            <div class="relative z-10 text-center -mt-20">
-                <h1 class="text-7xl font-bold mb-4 tracking-wide">SICUTI</h1>
-                <p class="text-lg font-light tracking-wide">Sistem Informasi Pengajuan Cuti Pegawai</p>
-                <div class="mt-8 inline-block bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4">
-                    <p class="text-sm font-medium">PT. TRISAKA KOPKARSENTRA UTAMA</p>
-                    <p class="text-xs text-blue-200 mt-1">SISTEM APLIKASI CUTI ONLINE</p>
+            <div class="panel-content brand-center">
+                <h1>SICUTI</h1>
+                <p>Sistem Informasi Pengajuan Cuti Pegawai</p>
+                <div class="brand-badge">
+                    <p class="title">PT. TRISAKA KOPKARSENTRA UTAMA</p>
+                    <p class="sub">SISTEM APLIKASI CUTI ONLINE</p>
                 </div>
             </div>
             
-            <div class="relative z-10 text-xs text-blue-200">
+            <div class="panel-footer">
                 © 2026 Politeknik Negeri Cilacap
             </div>
         </div>
 
-        <!-- Sisi Kanan: Form Login -->
-        <div class="w-full lg:w-1/2 flex items-center justify-center bg-[#f8fafc] p-6 sm:p-12">
-            <div class="w-full max-w-md">
+        <div class="right-panel">
+            <div class="form-container">
                 
-                <!-- Header Form -->
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang</h2>
-                    <p class="text-sm text-gray-500">Silakan masuk ke akun Anda untuk melanjutkan.</p>
+                <div class="form-header">
+                    <h2>Selamat Datang</h2>
+                    <p>Silakan masuk ke akun Anda untuk melanjutkan.</p>
                 </div>
 
-                <!-- Session Status -->
-                <x-auth-session-status class="mb-4" :status="session('status')" />
+                <x-auth-session-status style="margin-bottom: 16px;" :status="session('status')" />
 
-                <!-- Kotak Form Putih -->
-                <div class="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
+                <div class="form-card">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
-                        <!-- Email atau Username -->
-                        <div class="mb-5">
-                            <label for="login" class="block text-sm font-semibold text-gray-700 mb-2">Email atau Username</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <div class="form-group">
+                            <label for="login">Email atau Username</label>
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                 </div>
-                                <input id="login" type="text" name="login" value="{{ old('login') }}" required autofocus placeholder="Masukkan email atau username"
-                                    class="pl-11 block w-full rounded-lg border-gray-300 bg-gray-50 text-gray-900 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm transition-colors">
+                                <input id="login" class="form-input" type="text" name="login" value="{{ old('login') }}" required autofocus placeholder="Masukkan email atau username">
                             </div>
-                            <x-input-error :messages="$errors->get('login')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('login')" style="margin-top: 8px;" />
                         </div>
 
-                        <!-- Kata Sandi -->
-                        <div class="mb-6">
-                            <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label for="password">Kata Sandi</label>
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                 </div>
-                                <input id="password" type="password" name="password" required placeholder="Masukkan kata sandi"
-                                    class="pl-11 pr-10 block w-full rounded-lg border-gray-300 bg-gray-50 text-gray-900 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm transition-colors">
+                                <input id="password" class="form-input" style="padding-right: 40px;" type="password" name="password" required placeholder="Masukkan kata sandi">
                                 <!-- Ikon Eye -->
-                                <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer">
-                                    <svg class="w-5 h-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <div style="position: absolute; top: 50%; right: 14px; transform: translateY(-50%); cursor: pointer; color: #9ca3af;">
+                                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 </div>
                             </div>
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('password')" style="margin-top: 8px;" />
                         </div>
 
-                        <!-- Ingat Saya & Lupa Kata Sandi -->
-                        <div class="flex items-center justify-between mb-8">
-                            <label for="remember_me" class="inline-flex items-center cursor-pointer">
-                                <input id="remember_me" type="checkbox" name="remember" class="rounded border-gray-300 text-[#0b3c7c] shadow-sm focus:ring-[#0b3c7c]">
-                                <span class="ml-2 text-sm text-gray-600 font-medium">Ingat Saya</span>
+                        <div class="form-actions">
+                            <label for="remember_me" class="checkbox-label">
+                                <input id="remember_me" type="checkbox" name="remember">
+                                <span>Ingat Saya</span>
                             </label>
 
                             @if (Route::has('password.request'))
-                                <a class="text-sm font-semibold text-[#0b3c7c] hover:text-blue-900" href="{{ route('password.request') }}">
+                                <a class="forgot-link" href="{{ route('password.request') }}">
                                     Lupa Kata Sandi?
                                 </a>
                             @endif
                         </div>
 
                         <!-- Tombol Masuk -->
-                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-[#0b3c7c] hover:bg-[#082a5c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0b3c7c] transition-colors">
+                        <button type="submit" class="btn-submit">
                             Masuk
                         </button>
                     </form>
                 </div>
 
-                <!-- Footer Kanan -->
-                <div class="mt-8 text-center text-sm text-gray-500">
-                    Butuh bantuan akses? <a href="#" class="font-semibold text-[#0b3c7c] hover:underline">Hubungi HR Admin</a>
+                <div class="right-footer">
+                    Butuh bantuan akses? <a href="#">Hubungi HR Admin</a>
                 </div>
 
             </div>

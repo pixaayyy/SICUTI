@@ -3,139 +3,534 @@
 @section('title', 'Ajukan Cuti Baru')
 
 @section('content')
-<div class="max-w-4xl">
-    
-    <!-- Header Halaman -->
-    <div class="mb-8 border-b-2 border-[#0b3c7c] pb-4">
-        <h2 class="text-3xl font-bold text-gray-900">Ajukan Cuti Baru</h2>
-        <p class="mt-2 text-sm text-gray-500">Silakan isi formulir di bawah ini dengan lengkap untuk mengajukan permohonan cuti Anda.</p>
+
+<style>
+    .cuti-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        padding-bottom: 18px;
+        border-bottom: 2px solid #0b3c7c;
+    }
+
+    .page-header h2 {
+        margin: 0;
+        color: #222;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin-top: 8px;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .alert {
+        padding: 15px 18px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        color: #166534;
+        background-color: #dcfce7;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-danger {
+        color: #991b1b;
+        background-color: #fee2e2;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-danger ul {
+        margin: 8px 0 0 20px;
+    }
+
+    .cuti-form {
+        background-color: #ffffff;
+        padding: 35px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #0b3c7c;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+    .section-title svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 7px;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .required {
+        color: #dc2626;
+    }
+
+    .form-control {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background-color: #f9fafb;
+        color: #333;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .form-control:focus {
+        border-color: #0b3c7c;
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(11, 60, 124, 0.10);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 110px;
+    }
+
+    .form-help {
+        margin-top: 6px;
+        color: #888;
+        font-size: 12px;
+    }
+
+    .input-error {
+        margin-top: 6px;
+        color: #dc2626;
+        font-size: 12px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .special-leave {
+        display: none;
+        padding: 18px;
+        margin-bottom: 22px;
+        background-color: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+    }
+
+    .special-leave.active {
+        display: block;
+    }
+
+    .special-leave label {
+        color: #0b3c7c;
+    }
+
+    .leave-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        margin-top: 10px;
+        background-color: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+    }
+
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .info-icon {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #dbeafe;
+        color: #0b3c7c;
+        border-radius: 8px;
+    }
+
+    .info-icon svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .info-label {
+        margin: 0 0 4px;
+        color: #777;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .info-value {
+        margin: 0;
+        color: #222;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .remaining-value {
+        color: #0b3c7c;
+        text-align: right;
+    }
+
+    .upload-box {
+        padding: 25px;
+        text-align: center;
+        border: 2px dashed #d1d5db;
+        border-radius: 10px;
+        transition: 0.2s;
+    }
+
+    .upload-box:hover {
+        background-color: #f9fafb;
+        border-color: #0b3c7c;
+    }
+
+    .upload-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 10px;
+        color: #9ca3af;
+    }
+
+    .upload-label {
+        display: inline-block;
+        padding: 7px 14px;
+        color: #0b3c7c;
+        background-color: #fff;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .upload-label:hover {
+        color: #082a5c;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .upload-text {
+        color: #666;
+        font-size: 13px;
+    }
+
+    .file-info {
+        display: none;
+        margin-top: 10px;
+        color: #0b3c7c;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .file-info.active {
+        display: block;
+    }
+
+    .note-sakit {
+        display: none;
+        margin-top: 10px;
+        color: #dc2626;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .note-sakit.active {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .divider {
+        height: 1px;
+        margin: 30px 0;
+        background-color: #e5e7eb;
+        border: none;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+        padding-top: 10px;
+    }
+
+    .btn-cancel {
+        padding: 11px 18px;
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 7px;
+    }
+
+    .btn-cancel:hover {
+        background-color: #f3f4f6;
+        color: #333;
+    }
+
+    .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 22px;
+        color: white;
+        background-color: #0b3c7c;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-submit:hover {
+        background-color: #082a5c;
+    }
+
+    .btn-submit svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    @media (max-width: 768px) {
+        .cuti-container {
+            padding: 5px;
+        }
+
+        .cuti-form {
+            padding: 20px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .leave-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .remaining-value {
+            text-align: left;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+            align-items: stretch;
+        }
+
+        .btn-submit,
+        .btn-cancel {
+            text-align: center;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="cuti-container">
+    <div class="page-header">
+        <h2>Ajukan Cuti Baru</h2>
+        <p>Silakan isi formulir di bawah ini dengan lengkap untuk mengajukan permohonan cuti Anda.</p>
     </div>
 
-    <!-- Alert Sukses (Jika ada) -->
-    @if (session('status'))
-        <div class="mb-6 p-4 rounded-lg bg-green-50 text-green-700 border border-green-200">
+    @if(session('status'))
+        <div class="alert alert-success">
             {{ session('status') }}
         </div>
     @endif
 
-    <form action="{{ route('karyawan.cuti.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8 bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Pengajuan belum dapat dikirim.</strong>
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('karyawan.cuti.store') }}" method="POST" enctype="multipart/form-data" class="cuti-form">
         @csrf
 
-        <!-- SECTION 1: DETAIL CUTI -->
-        <div>
-            <h3 class="flex items-center text-lg font-bold text-[#0b3c7c] mb-6">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <div class="form-section">
+            <h3 class="section-title">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
                 Detail Cuti
             </h3>
-            
-            <div class="space-y-6">
-                <!-- Jenis Cuti -->
+
+            <div class="form-group">
+                <label for="jenis_cuti" class="form-label">
+                    Jenis Cuti
+                    <span class="required">*</span>
+                </label>
+                <select id="jenis_cuti" name="jenis_cuti_id" required class="form-control">
+                    <option value="" disabled selected>Pilih jenis cuti...</option>
+                    @foreach($jenisCutis as $jenis)
+                        <option value="{{ $jenis->id }}" data-nama="{{ strtolower($jenis->nama) }}" {{ old('jenis_cuti_id') == $jenis->id ? 'selected' : '' }}>
+                            {{ $jenis->nama }}
+                        </option>
+                    @endforeach
+                </select>
+                <p class="form-help">Pilih kategori cuti yang sesuai dengan kebutuhan Anda.</p>
+                @error('jenis_cuti_id')
+                    <div class="input-error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div id="kolom_cuti_khusus" class="special-leave">
+                <label for="catatan" class="form-label">
+                    Detail Cuti Khusus
+                    <span class="required">*</span>
+                </label>
+                <input type="text" id="catatan" name="catatan" value="{{ old('catatan') }}" placeholder="Misal: Menikah, Istri Melahirkan, Ada keluarga meninggal..." class="form-control">
+                <p class="form-help">Sebutkan secara spesifik keperluan cuti khusus Anda.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="tanggal_mulai" class="form-label">
+                        Tanggal Mulai
+                        <span class="required">*</span>
+                    </label>
+                    <input type="date" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai') }}" required class="form-control">
+                    @error('tanggal_mulai')
+                        <div class="input-error">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="tanggal_selesai" class="form-label">
+                        Tanggal Selesai
+                        <span class="required">*</span>
+                    </label>
+                    <input type="date" id="tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai') }}" required class="form-control">
+                    @error('tanggal_selesai')
+                        <div class="input-error">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="leave-info">
+                <div class="info-left">
+                    <div class="info-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="info-label">Estimasi Durasi</p>
+                        <p id="estimasi_durasi" class="info-value">- Hari</p>
+                    </div>
+                </div>
                 <div>
-                    <label for="jenis_cuti" class="block text-sm font-semibold text-gray-700">Jenis Cuti <span class="text-red-500">*</span></label>
-                    <select id="jenis_cuti" name="jenis_cuti_id" required class="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-gray-50">
-                        <option value="" disabled selected>Pilih jenis cuti...</option>
-                        @foreach($jenisCutis as $jenis)
-                            <option value="{{ $jenis->id }}" data-nama="{{ strtolower($jenis->nama) }}">
-                                {{ $jenis->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <p class="mt-1 text-xs text-gray-400">Pilih kategori cuti yang sesuai dengan kebutuhan Anda.</p>
-                    <x-input-error :messages="$errors->get('jenis_cuti_id')" class="mt-1" />
-                </div>
-
-                <!-- KOLOM TAMBAHAN: Cuti Khusus (Sembunyi secara default) -->
-                <div id="kolom_cuti_khusus" class="hidden bg-blue-50 p-4 rounded-lg border border-blue-100">
-                    <label for="catatan" class="block text-sm font-semibold text-[#0b3c7c]">Detail Cuti Khusus <span class="text-red-500">*</span></label>
-                    <input type="text" id="catatan" name="catatan" placeholder="Misal: Menikah, Istri Melahirkan, Ada keluarga meninggal..." class="mt-2 block w-full py-3 px-4 border-gray-300 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-white">
-                    <p class="mt-1 text-xs text-gray-500">Sebutkan secara spesifik keperluan cuti khusus Anda.</p>
-                </div>
-
-                <!-- Tanggal Mulai & Selesai -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="tanggal_mulai" class="block text-sm font-semibold text-gray-700">Tanggal Mulai <span class="text-red-500">*</span></label>
-                        <input type="date" id="tanggal_mulai" name="tanggal_mulai" required class="mt-1 block w-full py-3 px-4 border-gray-300 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-gray-50">
-                        <x-input-error :messages="$errors->get('tanggal_mulai')" class="mt-1" />
-                    </div>
-                    <div>
-                        <label for="tanggal_selesai" class="block text-sm font-semibold text-gray-700">Tanggal Selesai <span class="text-red-500">*</span></label>
-                        <input type="date" id="tanggal_selesai" name="tanggal_selesai" required class="mt-1 block w-full py-3 px-4 border-gray-300 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-gray-50">
-                        <x-input-error :messages="$errors->get('tanggal_selesai')" class="mt-1" />
-                    </div>
-                </div>
-
-                <!-- Kotak Info Durasi & Sisa Cuti -->
-                <div class="flex items-center justify-between bg-gray-100 p-4 rounded-xl border border-gray-200">
-                    <div class="flex items-center gap-4">
-                        <div class="p-3 bg-blue-100 text-[#0b3c7c] rounded-lg">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 font-semibold">Estimasi Durasi</p>
-                            <!-- ID estimasi_durasi ditambahkan di sini -->
-                            <p id="estimasi_durasi" class="text-lg font-bold text-gray-900">- Hari</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs text-gray-500 font-semibold">Sisa Cuti Tahunan</p>
-                        <p class="text-lg font-bold text-[#0b3c7c]">{{ $sisaCuti ?? 0 }} Hari</p>
-                    </div>
+                    <p class="info-label">Sisa Cuti Tahunan</p>
+                    <p class="info-value remaining-value">{{ $sisaCuti ?? 0 }} Hari</p>
                 </div>
             </div>
         </div>
 
-        <hr class="border-gray-200">
+        <hr class="divider">
 
-        <!-- SECTION 2: KETERANGAN TAMBAHAN -->
-        <div>
-            <h3 class="flex items-center text-lg font-bold text-[#0b3c7c] mb-6">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+        <div class="form-section">
+            <h3 class="section-title">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                </svg>
                 Keterangan Tambahan
             </h3>
 
-            <div class="space-y-6">
-                <!-- Alasan / Keterangan -->
-                <div>
-                    <label for="alasan" class="block text-sm font-semibold text-gray-700">Alasan / Keterangan <span class="text-red-500">*</span></label>
-                    <textarea id="alasan" name="alasan" rows="4" required placeholder="Jelaskan alasan pengajuan cuti secara singkat..." class="mt-1 block w-full py-3 px-4 border-gray-300 focus:ring-[#0b3c7c] focus:border-[#0b3c7c] sm:text-sm rounded-lg bg-gray-50 resize-none"></textarea>
-                    <x-input-error :messages="$errors->get('alasan')" class="mt-1" />
+            <div class="form-group">
+                <label for="alasan" class="form-label">
+                    Alasan / Keterangan
+                    <span class="required">*</span>
+                </label>
+                <textarea id="alasan" name="alasan" rows="4" required placeholder="Jelaskan alasan pengajuan cuti secara singkat..." class="form-control">{{ old('alasan') }}</textarea>
+                @error('alasan')
+                    <div class="input-error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label id="label_dokumen" class="form-label">
+                    Dokumen Pendukung (Opsional)
+                </label>
+
+                <div class="upload-box">
+                    <svg class="upload-icon" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+
+                    <div>
+                        <label for="data_pendukung" class="upload-label">
+                            Unggah File
+                            <input id="data_pendukung" name="data_pendukung" type="file" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+                        </label>
+                        <span class="upload-text">atau pilih file dari komputer</span>
+                    </div>
+
+                    <p class="form-help">PDF, JPG, PNG maksimal 5MB</p>
+                    <p id="file-name-display" class="file-info"></p>
                 </div>
 
-                <!-- Dokumen Pendukung -->
-                <div>
-                    <label id="label_dokumen" class="block text-sm font-semibold text-gray-700 mb-2">Dokumen Pendukung (Opsional)</label>
-                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:bg-gray-50 transition relative">
-                        <div class="space-y-1 text-center">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <div class="flex text-sm text-gray-600 justify-center">
-                                <label for="data_pendukung" class="relative cursor-pointer bg-white rounded-md font-medium text-[#0b3c7c] hover:text-blue-800 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#0b3c7c]">
-                                    <span>Unggah File</span>
-                                    <input id="data_pendukung" name="data_pendukung" type="file" class="sr-only">
-                                </label>
-                                <p class="pl-1">atau seret dan lepas</p>
-                            </div>
-                            <p class="text-xs text-gray-500">PDF, JPG, PNG maksimal 5MB</p>
-                        </div>
-                    </div>
-                    <!-- Peringatan dinamis untuk Cuti Sakit (Sembunyi secara default) -->
-                    <p id="note_sakit" class="mt-2 text-sm font-medium text-red-600 hidden flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        Wajib melampirkan Surat Keterangan Sakit dari Dokter!
-                    </p>
-                    <x-input-error :messages="$errors->get('data_pendukung')" class="mt-1" />
-                </div>
+                <p id="note_sakit" class="note-sakit">
+                    <span>⚠</span>
+                    Wajib melampirkan Surat Keterangan Sakit dari Dokter!
+                </p>
+
+                @error('data_pendukung')
+                    <div class="input-error">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
-        <!-- Tombol Aksi -->
-        <div class="flex items-center justify-end gap-4 pt-6">
-            <a href="#" class="text-sm font-semibold text-gray-500 hover:text-gray-700">Batal</a>
-            <button type="submit" class="inline-flex justify-center items-center py-3 px-6 border border-transparent shadow-sm text-sm font-bold rounded-lg text-white bg-[#0b3c7c] hover:bg-[#082a5c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0b3c7c] transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12L3.269 3.125A59.769 59.769 0 0121.485 12 59.768 59.768 0 013.27 20.875L5.999 12Zm0 0h7.5"></path>
+        <div class="form-actions">
+            <a href="{{ route('karyawan.cuti.index') }}" class="btn-cancel">Batal</a>
+            <button type="submit" class="btn-submit">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12L3.269 3.125A59.769 59.769 0 0121.485 12 59.768 59.768 0 013.27 20.875L5.999 12Zm0 0h7.5"/>
                 </svg>
                 Kirim Pengajuan
             </button>
@@ -143,79 +538,87 @@
     </form>
 </div>
 
-<!-- SCRIPT UNTUK LOGIKA FORM DINAMIS & PERHITUNGAN DURASI -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const jenisCuti = document.getElementById('jenis_cuti');
-        
-        // Element untuk Cuti Khusus
-        const kolomKhusus = document.getElementById('kolom_cuti_khusus');
-        const inputKhusus = document.getElementById('catatan');
-        
-        // Element untuk Dokumen Cuti Sakit
-        const dokumenInput = document.getElementById('data_pendukung');
-        const labelDokumen = document.getElementById('label_dokumen');
-        const noteSakit = document.getElementById('note_sakit');
+document.addEventListener('DOMContentLoaded', function () {
+    const jenisCuti = document.getElementById('jenis_cuti');
+    const kolomKhusus = document.getElementById('kolom_cuti_khusus');
+    const inputKhusus = document.getElementById('catatan');
+    const dokumenInput = document.getElementById('data_pendukung');
+    const labelDokumen = document.getElementById('label_dokumen');
+    const noteSakit = document.getElementById('note_sakit');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const tglMulai = document.getElementById('tanggal_mulai');
+    const tglSelesai = document.getElementById('tanggal_selesai');
+    const estimasiDurasi = document.getElementById('estimasi_durasi');
 
-        // Element untuk Durasi
-        const tglMulai = document.getElementById('tanggal_mulai');
-        const tglSelesai = document.getElementById('tanggal_selesai');
-        const estimasiDurasi = document.getElementById('estimasi_durasi');
+    dokumenInput.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+            fileNameDisplay.textContent = 'File terpilih: ' + this.files[0].name;
+            fileNameDisplay.classList.add('active');
+        } else {
+            fileNameDisplay.textContent = '';
+            fileNameDisplay.classList.remove('active');
+        }
+    });
 
-        // Fungsi Perubahan Dropdown Jenis Cuti
-        jenisCuti.addEventListener('change', function() {
-            const selectedOptionName = this.options[this.selectedIndex].getAttribute('data-nama');
-            
-            if (selectedOptionName && (selectedOptionName.includes('khusus') || selectedOptionName.includes('penting'))) {
-                kolomKhusus.classList.remove('hidden'); 
-                inputKhusus.setAttribute('required', 'required'); 
-            } else {
-                kolomKhusus.classList.add('hidden'); 
-                inputKhusus.removeAttribute('required'); 
-                inputKhusus.value = ''; 
-            }
-
-            if (selectedOptionName && selectedOptionName.includes('sakit')) {
-                noteSakit.classList.remove('hidden'); 
-                labelDokumen.innerHTML = 'Dokumen Pendukung <span class="text-red-500">*</span>'; 
-                dokumenInput.setAttribute('required', 'required'); 
-            } else {
-                noteSakit.classList.add('hidden'); 
-                labelDokumen.innerHTML = 'Dokumen Pendukung (Opsional)'; 
-                dokumenInput.removeAttribute('required'); 
-            }
-        });
-
-        // Fungsi Hitung Durasi Otomatis
-        function hitungDurasi() {
-            if (tglMulai.value && tglSelesai.value) {
-                const start = new Date(tglMulai.value);
-                const end = new Date(tglSelesai.value);
-                
-                // Pastikan tanggal selesai tidak lebih kecil dari tanggal mulai
-                if (end >= start) {
-                    // Hitung selisih dalam milidetik, konversi ke hari, dan ditambah 1
-                    const diffTime = Math.abs(end - start);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
-                    
-                    estimasiDurasi.innerText = diffDays + ' Hari';
-                    estimasiDurasi.classList.remove('text-red-500');
-                    estimasiDurasi.classList.add('text-gray-900');
-                } else {
-                    estimasiDurasi.innerText = 'Tidak Valid';
-                    estimasiDurasi.classList.remove('text-gray-900');
-                    estimasiDurasi.classList.add('text-red-500');
-                }
-            } else {
-                estimasiDurasi.innerText = '- Hari';
-                estimasiDurasi.classList.remove('text-red-500');
-                estimasiDurasi.classList.add('text-gray-900');
-            }
+    function cekJenisCuti() {
+        if (!jenisCuti.value) {
+            return;
         }
 
-        // Panggil fungsi setiap kali input tanggal diubah
-        tglMulai.addEventListener('change', hitungDurasi);
-        tglSelesai.addEventListener('change', hitungDurasi);
-    });
+        const selectedOption = jenisCuti.options[jenisCuti.selectedIndex];
+        const nama = selectedOption.getAttribute('data-nama');
+
+        if (nama && (nama.includes('khusus') || nama.includes('penting'))) {
+            kolomKhusus.classList.add('active');
+            inputKhusus.setAttribute('required', 'required');
+        } else {
+            kolomKhusus.classList.remove('active');
+            inputKhusus.removeAttribute('required');
+            inputKhusus.value = '';
+        }
+
+        if (nama && nama.includes('sakit')) {
+            noteSakit.classList.add('active');
+            labelDokumen.innerHTML = 'Dokumen Pendukung (Surat Dokter) <span class="required">*</span>';
+            dokumenInput.setAttribute('required', 'required');
+        } else {
+            noteSakit.classList.remove('active');
+            labelDokumen.textContent = 'Dokumen Pendukung (Opsional)';
+            dokumenInput.removeAttribute('required');
+        }
+    }
+
+    jenisCuti.addEventListener('change', cekJenisCuti);
+
+    cekJenisCuti();
+
+    function hitungDurasi() {
+        if (tglMulai.value && tglSelesai.value) {
+            const start = new Date(tglMulai.value);
+            const end = new Date(tglSelesai.value);
+
+            if (end >= start) {
+                const diffTime = end.getTime() - start.getTime();
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+                estimasiDurasi.textContent = diffDays + ' Hari';
+                estimasiDurasi.style.color = '#222';
+            } else {
+                estimasiDurasi.textContent = 'Tidak Valid';
+                estimasiDurasi.style.color = '#dc2626';
+            }
+        } else {
+            estimasiDurasi.textContent = '- Hari';
+            estimasiDurasi.style.color = '#222';
+        }
+    }
+
+    tglMulai.addEventListener('change', hitungDurasi);
+    tglSelesai.addEventListener('change', hitungDurasi);
+
+    hitungDurasi();
+});
 </script>
+
 @endsection

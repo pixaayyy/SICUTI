@@ -4,65 +4,280 @@ namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanCuti;
-use App\Models\JenisCuti; // Wajib dipanggil untuk dropdown
+use App\Models\JenisCuti;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon; // Wajib dipanggil untuk menghitung durasi hari
+use Carbon\Carbon;
 
 class CutiController extends Controller
 {
     public function create()
     {
-        $sisaCuti = 12; 
-        
-        // Mengambil data jenis cuti dari database (tabel jenis_cuti)
-        $jenisCutis = JenisCuti::all(); 
-        
-        return view('karyawan.cuti.create', compact('sisaCuti', 'jenisCutis'));
+        $user = Auth::user();
+        $karyawan = $user->karyawan;
+
+        if (!$karyawan) {
+            return redirect()
+                ->route('karyawan.dashboard')
+                ->withErrors([
+                    'msg' => 'Data karyawan tidak ditemukan untuk akun ini.'
+                ]);
+        }
+
+        $jenisCutis = JenisCuti::orderBy('nama')->get();
+        $jatahCuti = 12;
+        $tahun = Carbon::now()->year;
+
+        $cutiTerpakai = PengajuanCuti::where('karyawan_id', $karyawan->id)
+            ->where('status', 'Disetujui')
+            ->whereYear('tanggal_mulai', $tahun)
+            ->sum('durasi');
+
+        $sisaCuti = max(0, $jatahCuti - $cutiTerpakai);
+
+        return view(
+            'karyawan.cuti.create',
+            compact(
+                'jenisCutis',
+                'sisaCuti'
+            )
+        );
     }
 
     public function store(Request $request)
     {
-        // 1. Validasi Input sesuai nama kolom di Model baru
-        $request->validate([
-            'jenis_cuti_id' => 'required|exists:jenis_cuti,id',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'alasan' => 'required|string',
-            'catatan' => 'nullable|string', // Menggantikan keterangan_khusus
-            'data_pendukung' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // Menggantikan dokumen
+        $user = Auth::user();
+        $karyawan = $user->karyawan;
+
+        if (!$karyawan) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'msg' => 'Data karyawan tidak ditemukan untuk akun ini.'
+                ]);
+        }
+
+        $validated = $request->validate([
+            'jenis_cuti_id' => [
+                'required',
+                'exists:jenis_cuti,id'
+            ],
+            'tanggal_mulai' => [
+                'required',
+                'date'
+            ],
+            'tanggal_selesai' => [
+                'required',
+                'date',
+                'after_or_equal:tanggal_mulai'
+            ],
+            'alasan' => [
+                'required',
+                'string',
+                'max:1000'
+            ],
+            'catatan' => [
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'data_pendukung' => [
+                'nullable',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:5120'
+            ],
         ]);
 
-        // 2. Hitung Durasi Cuti (Menggunakan Carbon)
-        $start = Carbon::parse($request->tanggal_mulai);
-        $end = Carbon::parse($request->tanggal_selesai);
-        $durasi = $start->diffInDays($end) + 1; // Ditambah 1 agar misal tgl 13 ke 13 dihitung 1 hari
+        $start = Carbon::parse(
+            $validated['tanggal_mulai']
+        );
 
-        // 3. Logika Upload Dokumen
+        $end = Carbon::parse(
+            $validated['tanggal_selesai']
+        );
+
+        $durasi = $start->diffInDays($end) + 1;
+
+        $jatahCuti = 12;
+        $tahun = Carbon::now()->year;
+
+        $cutiTerpakai = PengajuanCuti::where(
+                'karyawan_id',
+                $karyawan->id
+            )
+            ->where(
+                'status',
+                'Disetujui'
+            )
+            ->whereYear(
+                'tanggal_mulai',
+                $tahun
+            )
+            ->sum('durasi');
+
+        $sisaCuti = max(
+            0,
+            $jatahCuti - $cutiTerpakai
+        );
+
+        if ($durasi > $sisaCuti) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'tanggal_selesai' =>
+                        'Durasi cuti yang diajukan (' .
+                        $durasi .
+                        ' hari) melebihi sisa cuti Anda (' .
+                        $sisaCuti .
+                        ' hari).'
+                ]);
+        }
+
         $pathDokumen = null;
+
         if ($request->hasFile('data_pendukung')) {
-            $pathDokumen = $request->file('data_pendukung')->store('dokumen_cuti', 'public');
+            $pathDokumen = $request
+                ->file('data_pendukung')
+                ->store(
+                    'dokumen_cuti',
+                    'public'
+                );
         }
 
-        // 4. Pastikan User memiliki data Karyawan
-        $karyawan = Auth::user()->karyawan;
-        if (!$karyawan) {
-            return back()->withErrors(['msg' => 'Data karyawan tidak ditemukan untuk akun ini.']);
-        }
-
-        // 5. Simpan Data ke Database
         PengajuanCuti::create([
             'karyawan_id' => $karyawan->id,
-            'jenis_cuti_id' => $request->jenis_cuti_id,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_selesai' => $request->tanggal_selesai,
-            'durasi' => $durasi,
-            'alasan' => $request->alasan,
-            'catatan' => $request->catatan,
-            'data_pendukung' => $pathDokumen,
-            'status' => 'Menunggu',
+            'jenis_cuti_id' =>
+                $validated['jenis_cuti_id'],
+            'tanggal_mulai' =>
+                $validated['tanggal_mulai'],
+            'tanggal_selesai' =>
+                $validated['tanggal_selesai'],
+            'durasi' =>
+                $durasi,
+            'alasan' =>
+                $validated['alasan'],
+            'catatan' =>
+                $validated['catatan'] ?? null,
+            'data_pendukung' =>
+                $pathDokumen,
+            'status' =>
+                'Menunggu',
         ]);
 
-        return redirect()->route('karyawan.cuti.create')->with('status', 'Hore! Pengajuan cuti Anda berhasil dikirim.');
+        return redirect()
+            ->route('karyawan.cuti.index')
+            ->with(
+                'status',
+                'Hore! Pengajuan cuti Anda berhasil dikirim.'
+            );
+    }
+
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $karyawan = $user->karyawan;
+
+        if (!$karyawan) {
+            return redirect()
+                ->route('karyawan.dashboard')
+                ->withErrors([
+                    'msg' =>
+                        'Data karyawan tidak ditemukan untuk akun ini.'
+                ]);
+        }
+
+        $jenisCutis = JenisCuti::orderBy('nama')->get();
+
+        $query = PengajuanCuti::with('jenisCuti')
+            ->where(
+                'karyawan_id',
+                $karyawan->id
+            );
+
+        if ($request->filled('jenis_cuti_id')) {
+            $query->where(
+                'jenis_cuti_id',
+                $request->jenis_cuti_id
+            );
+        }
+
+        if (
+            $request->filled('tanggal_dari') &&
+            $request->filled('tanggal_sampai')
+        ) {
+            $query->where(function ($q) use ($request) {
+                $q->whereDate(
+                    'tanggal_mulai',
+                    '<=',
+                    $request->tanggal_sampai
+                )
+                ->whereDate(
+                    'tanggal_selesai',
+                    '>=',
+                    $request->tanggal_dari
+                );
+            });
+        }
+        elseif ($request->filled('tanggal_dari')) {
+            $query->whereDate(
+                'tanggal_selesai',
+                '>=',
+                $request->tanggal_dari
+            );
+        }
+        elseif ($request->filled('tanggal_sampai')) {
+            $query->whereDate(
+                'tanggal_mulai',
+                '<=',
+                $request->tanggal_sampai
+            );
+        }
+
+        $pengajuanCuti = $query
+            ->latest()
+            ->get();
+
+        return view(
+            'karyawan.cuti.index',
+            compact(
+                'pengajuanCuti',
+                'jenisCutis'
+            )
+        );
+    }
+
+    public function status()
+    {
+        $karyawan = Auth::user()->karyawan;
+
+        if (!$karyawan) {
+            return back()
+                ->withErrors([
+                    'msg' =>
+                        'Data karyawan tidak ditemukan untuk akun ini.'
+                ]);
+        }
+
+        $pengajuanCuti = PengajuanCuti::with('jenisCuti')
+            ->where(
+                'karyawan_id',
+                $karyawan->id
+            )
+            ->whereIn(
+                'status',
+                [
+                    'Menunggu',
+                    'Disetujui',
+                    'Ditolak'
+                ]
+            )
+            ->latest()
+            ->get();
+
+        return view(
+            'karyawan.cuti.status',
+            compact('pengajuanCuti')
+        );
     }
 }
