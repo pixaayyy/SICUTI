@@ -12,22 +12,28 @@ class DashboardkController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         $karyawan = $user->karyawan;
+        $tahun = date('Y'); 
 
-        $tahun = date('Y');
-
-        $sisaCuti = SisaCuti::where('karyawan_id', $karyawan->id)
+        $dataSisaCuti = SisaCuti::where('karyawan_id', $karyawan->id)
             ->latest('tahun')
             ->first();
+            
+        $jatahCuti = $dataSisaCuti->jatah ?? 12;
 
-        $tahun = $sisaCuti->tahun ?? date('Y');
+        $cutiTerpakai = PengajuanCuti::where('karyawan_id', $karyawan->id)
+            ->whereYear('tanggal_mulai', $tahun)
+            ->where('status', 'disetujui') 
+            ->sum('durasi');
 
-        $jatahCuti = $sisaCuti->jatah ?? 0;
-        $cutiTerpakai = $sisaCuti->terpakai ?? 0;
-        $sisaCutiHari = $sisaCuti->sisa ?? 0;
+        $sisaCutiHari = $jatahCuti - $cutiTerpakai;
+
+        if ($sisaCutiHari < 0) {
+            $sisaCutiHari = 0;
+        }
 
         $cutiDitolak = PengajuanCuti::where('karyawan_id', $karyawan->id)
+            ->whereYear('tanggal_mulai', $tahun)
             ->where('status', 'ditolak')
             ->count();
 

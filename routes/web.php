@@ -29,4 +29,5 @@ Route::middleware(['auth'])->prefix('karyawan')->name('karyawan.')->group(functi
     Route::get('/dashboard', [DashboardkController::class, 'index'])->name('dashboard');
 });
 
+
 require __DIR__.'/auth.php';
