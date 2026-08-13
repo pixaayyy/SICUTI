@@ -45,7 +45,7 @@
             </div>
             
             <div class="relative z-10 text-xs text-blue-200">
-                © 2024 Politeknik Negeri Cilacap
+                © 2026 Politeknik Negeri Cilacap
             </div>
         </div>
 
