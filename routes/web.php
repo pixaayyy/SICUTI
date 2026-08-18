@@ -39,5 +39,5 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// TAMBAHKAN BARIS INI: Untuk memanggil semua route autentikasi bawaan Laravel (termasuk password.update)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
