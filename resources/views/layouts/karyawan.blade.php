@@ -353,6 +353,142 @@
                 gap: 8px;
             }
         }
+
+        /* --- AWAL CSS NOTIFIKASI --- */
+        .notification-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .notification-button:hover {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .notification-button svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            background-color: #ef4444; /* Merah */
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 999px;
+            border: 2px solid #ffffff;
+        }
+
+        .notification-dropdown {
+            display: none; /* Disembunyikan secara default */
+            position: absolute;
+            top: calc(100% + 8px);
+            right: -60px; /* Disesuaikan agar tidak terpotong layar */
+            width: 320px;
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .notification-wrapper.active .notification-dropdown {
+            display: block; /* Muncul ketika class active ditambahkan lewat JS */
+        }
+
+        .notif-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notif-header a {
+            font-size: 12px;
+            color: #0b3c7c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .unread-label {
+            font-size: 12px;
+            color: #0b3c7c;
+            font-weight: 500;
+        }
+
+        .notif-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notif-item {
+            display: block;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            text-decoration: none;
+            color: #374151;
+            transition: background-color 0.2s;
+        }
+
+        .notif-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .notif-item.unread {
+            background-color: #eff6ff; /* Biru muda untuk yang belum dibaca */
+        }
+
+        .notif-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .notif-desc {
+            font-size: 12px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .notif-time {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .notif-empty {
+            padding: 24px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+        }
     </style>
 </head>
 
@@ -405,11 +541,84 @@
         <main class="main-area">
             <header class="topbar">
                 <div class="topbar-content">
-                    <button type="button" class="notification-button">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                        </svg>
-                    </button>
+                   {{-- NOTIFIKASI --}}
+                    <div class="notification-wrapper" id="notif-wrapper">
+                        @php
+                            $riwayatCuti = collect();
+                            $unreadCount = 0;
+
+                            if (Auth::check() && Auth::user()->karyawan) {
+                                $riwayatCuti = \App\Models\PengajuanCuti::where('karyawan_id', Auth::user()->karyawan->id)
+                                    ->orderBy('updated_at', 'desc')
+                                    ->take(5)
+                                    ->get();
+                                
+                                // Opsional: Menghitung jumlah sebagai badge (misal kita hitung semua 5 terakhir)
+                                $unreadCount = $riwayatCuti->count(); 
+                            }
+                        @endphp
+
+                        <button type="button"
+                                class="notification-button"
+                                id="notification-button"
+                                onclick="toggleNotif(event)"
+                                aria-label="Notifikasi"
+                                aria-expanded="false">
+                            <svg fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+
+                            @if($unreadCount > 0)
+                                <span class="notification-badge">{{ $unreadCount }}</span>
+                            @endif
+                        </button>
+
+                        <div class="notification-dropdown" id="notification-dropdown">
+                            <div class="notif-header">
+                                <span>Status Pengajuan Terakhir</span>
+                            </div>
+
+                            <div class="notif-list">
+                                @forelse($riwayatCuti as $cuti)
+                                    <a href="{{ route('karyawan.cuti.status') }}" class="notif-item unread">
+                                        <div class="notif-title">
+                                            Pengajuan Cuti 
+                                            @if(strtolower($cuti->status) == 'disetujui')
+                                                <span style="color: #10b981;">Disetujui</span>
+                                            @elseif(strtolower($cuti->status) == 'ditolak')
+                                                <span style="color: #ef4444;">Ditolak</span>
+                                            @else
+                                                <span style="color: #f59e0b;">Diajukan</span>
+                                            @endif
+                                        </div>
+
+                                        <div class="notif-desc">
+                                            Cuti untuk tanggal {{ \Carbon\Carbon::parse($cuti->tanggal_mulai)->format('d M Y') }} berstatus <strong>{{ ucfirst($cuti->status) }}</strong>.
+                                        </div>
+
+                                        <span class="notif-time">
+                                            {{ optional($cuti->updated_at ?? $cuti->created_at)->diffForHumans() ?? 'Baru saja' }}
+                                        </span>
+                                    </a>
+                                @empty
+                                    <div class="notif-empty">
+                                        <svg style="width: 32px; height: 32px; margin: 0 auto 8px; color: #d1d5db;"
+                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                        </svg>
+                                        Belum ada aktivitas pengajuan cuti.
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
 
                     @php
                         $currentUser = Auth::user();
@@ -465,5 +674,28 @@
         </main>
     </div>
 </body>
+<script>
+        function toggleNotif(event) {
+            event.stopPropagation();
 
+            const wrapper = document.getElementById('notif-wrapper');
+            const button = document.getElementById('notification-button');
+
+            const isActive = wrapper.classList.toggle('active');
+            button.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        }
+
+        document.addEventListener('click', function(event) {
+            const wrapper = document.getElementById('notif-wrapper');
+            const button = document.getElementById('notification-button');
+
+            if (wrapper && !wrapper.contains(event.target)) {
+                wrapper.classList.remove('active');
+
+                if (button) {
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+    </script>
 </html>
