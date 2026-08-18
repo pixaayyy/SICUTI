@@ -4,166 +4,326 @@
 
 @section('content')
 
-{{-- Greeting --}}
-<div class="mb-6">
-    <h2 class="text-[30px] font-semibold text-gray-800 m-0">Halo, {{ $user->name }}</h2>
-    <p class="text-[14px] text-gray-500 mt-1">
-        {{ $karyawan->jabatan ?? '-' }}
-        |
-        {{ $karyawan->departemen ?? '-' }}
-    </p>
-</div>
-
-{{-- Statistik --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
-    {{-- Sisa Cuti --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 h-[140px] shadow-sm flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-50 text-[#0D3B82]">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-            </div>
-            <span class="bg-blue-100 text-blue-700 text-xs px-2.5 py-1 rounded-full">Tersedia</span>
-        </div>
-        <div>
-            <p class="text-sm text-gray-500 mb-0.5">Sisa Cuti Tahunan</p>
-            <span class="text-[30px] font-bold text-gray-900">
-                {{ $sisaCutiHari }}
-            </span>
-            <span class="text-sm text-gray-500">Hari</span>
-        </div>
-    </div>
-
-    {{-- Cuti Terpakai --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 h-[140px] shadow-sm flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-50 text-[#0D3B82]">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-            </div>
-        </div>
-        <div>
-            <p class="text-sm text-gray-500 mb-0.5">Cuti Terpakai</p>
-            <span class="text-[30px] font-bold text-gray-900">
-                {{ $cutiTerpakai }}
-            </span>
-            <span class="text-sm text-gray-500">Hari</span>
-        </div>
-    </div>
-
-    {{-- Cuti Ditolak --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 h-[140px] shadow-sm flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-red-50 text-red-600">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-        </div>
-        <div>
-            <p class="text-sm text-gray-500 mb-0.5">Cuti Ditolak</p>
-            <span class="text-[30px] font-bold text-gray-900">
-                {{ $cutiDitolak }}
-            </span>
-            <span class="text-sm text-gray-500">Pengajuan</span>
-        </div>
-    </div>
-
-    {{-- Tahun --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 h-[140px] shadow-sm flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 text-gray-600">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-            </div>
-        </div>
-        <div>
-            <p class="text-sm text-gray-500 mb-0.5">Cuti Tahun Ini</p>
-            <span class="text-[30px] font-bold text-gray-900">
-                {{ $tahun }}
-            </span>
-        </div>
-    </div>
-
-</div>
-
-{{-- Pengajuan Terbaru --}}
-<div class="mt-6 bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)]">
+<style>
+    .dashboard-container {
+        font-family: 'Inter', sans-serif;
+        color: #1f2937;
+    }
+    .greeting-section h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+    }
+    .greeting-section p {
+        font-size: 14px;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+    @media (min-width: 640px) {
+        .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1024px) {
+        .stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 12px -4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 140px;
+        position: relative;
+        overflow: hidden;
+    }
+    .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .stat-icon.blue { background: #eff6ff; color: #0D3B82; }
+    .stat-icon.red { background: #fef2f2; color: #ef4444; }
+    .stat-icon.gray { background: #f3f4f6; color: #4b5563; }
     
-    <div class="flex justify-between items-center px-6 py-4 border-b border-slate-50">
-        <h3 class="text-lg font-semibold text-gray-900 m-0">Pengajuan Terbaru</h3>
-        <a href="#" class="text-[#0D3B82] text-sm font-medium hover:underline">
-            Lihat Semua →
-        </a>
+    .badge-tersedia {
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 9999px;
+    }
+    .stat-title {
+        font-size: 12px;
+        color: #9ca3af;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+    .stat-value-wrapper {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+    }
+    .stat-number {
+        font-size: 24px;
+        font-weight: 700;
+        color: #111827;
+    }
+    .stat-unit {
+        font-size: 12px;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .card-table-container {
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px -4px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    .table-header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    .table-header-flex h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+    }
+    .table-header-flex a {
+        color: #0D3B82;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .table-header-flex a:hover {
+        text-decoration: underline;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .custom-table {
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+    }
+    .custom-table th {
+        background: #ffffff;
+        border-bottom: 1px solid #f3f4f6;
+        padding: 16px 24px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .custom-table td {
+        padding: 16px 24px;
+        font-size: 14px;
+        border-bottom: 1px solid #f9fafb;
+    }
+    .custom-table tbody tr:hover {
+        background-color: #f9fafb;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .status-menunggu { background: #eff6ff; color: #2563eb; }
+    .status-disetujui { background: #f0fdf4; color: #16a34a; }
+    .status-ditolak { background: #fef2f2; color: #ef4444; }
+    .status-dibatalkan { background: #f3f4f6; color: #4b5563; }
+
+    .action-btn {
+        color: #2563eb;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+    .action-btn:hover {
+        color: #1e3a8a;
+    }
+</style>
+
+<div class="dashboard-container">
+
+    {{-- Greeting --}}
+    <div class="greeting-section mb-8">
+        <h2>Halo, {{ $user->name }}</h2>
+        <p>
+            {{ $karyawan->jabatan ?? '-' }} | {{ $karyawan->departemen ?? '-' }}
+        </p>
     </div>
 
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-semibold text-gray-500 uppercase">Jenis Cuti</th>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-semibold text-gray-500 uppercase">Tanggal</th>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-semibold text-gray-500 uppercase">Durasi</th>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-semibold text-gray-500 uppercase">Status</th>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-semibold text-gray-500 uppercase text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-                @forelse($pengajuanTerbaru as $pengajuan)
-                    <tr class="hover:bg-gray-50/50 transition">
-                        <td class="px-6 py-3 text-sm text-gray-700">
-                            {{ $pengajuan->jenisCuti->nama ?? '-' }}
-                        </td>
-                        <td class="px-6 py-3 text-sm text-gray-700">
-                            {{ \Carbon\Carbon::parse($pengajuan->tanggal_mulai)->format('d M Y') }}
-                            -
-                            {{ \Carbon\Carbon::parse($pengajuan->tanggal_selesai)->format('d M Y') }}
-                        </td>
-                        <td class="px-6 py-3 text-sm text-gray-700">
-                            {{ $pengajuan->durasi }} Hari
-                        </td>
-                        <td class="px-6 py-3">
-                            @if($pengajuan->status === 'menunggu')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
-                                    Menunggu Persetujuan
-                                </span>
-                            @elseif($pengajuan->status === 'disetujui')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-600">
-                                    Disetujui
-                                </span>
-                            @elseif($pengajuan->status === 'ditolak')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-600">
-                                    Ditolak
-                                </span>
-                            @elseif($pengajuan->status === 'dibatalkan')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                                    Dibatalkan
-                                </span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-3 text-center">
-                            <a href="#" class="text-[#0D3B82] hover:text-blue-900 transition flex justify-center">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">
-                            Belum ada pengajuan cuti.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+    {{-- Statistik --}}
+    <div class="stats-grid">
+
+        {{-- Sisa Cuti --}}
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon blue">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <span class="badge-tersedia">Tersedia</span>
+            </div>
+            <div>
+                <p class="stat-title">Sisa Cuti Tahunan</p>
+                <div class="stat-value-wrapper">
+                    <span class="stat-number">{{ $sisaCutiHari }}</span>
+                    <span class="stat-unit">Hari</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Cuti Terpakai --}}
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon blue">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <p class="stat-title">Cuti Terpakai</p>
+                <div class="stat-value-wrapper">
+                    <span class="stat-number">{{ $cutiTerpakai }}</span>
+                    <span class="stat-unit">Hari</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Cuti Ditolak --}}
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon red">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <p class="stat-title">Cuti Ditolak</p>
+                <div class="stat-value-wrapper">
+                    <span class="stat-number">{{ $cutiDitolak }}</span>
+                    <span class="stat-unit">Pengajuan</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Cuti Tahun Ini --}}
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon gray">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <p class="stat-title">Cuti Tahun Ini</p>
+                <span class="stat-number">{{ $tahun }}</span>
+            </div>
+        </div>
+
     </div>
+
+    {{-- Pengajuan Terbaru --}}
+    <div class="card-table-container">
+        
+        <div class="table-header-flex">
+            <h3>Pengajuan Terbaru</h3>
+            <a href="{{ route('karyawan.cuti.index') }}">Lihat Semua →</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Jenis Cuti</th>
+                        <th>Tanggal</th>
+                        <th>Durasi</th>
+                        <th>Status</th>
+                        <th style="text-align: right; padding-right: 32px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($pengajuanTerbaru as $pengajuan)
+                        <tr>
+                            <td style="font-weight: 500; color: #111827;">
+                                {{ $pengajuan->jenisCuti->nama ?? '-' }}
+                            </td>
+                            <td style="color: #6b7280; font-size: 13px;">
+                                {{ \Carbon\Carbon::parse($pengajuan->tanggal_mulai)->format('d M Y') }} 
+                                @if($pengajuan->tanggal_selesai && $pengajuan->tanggal_mulai != $pengajuan->tanggal_selesai)
+                                    - {{ \Carbon\Carbon::parse($pengajuan->tanggal_selesai)->format('d M Y') }}
+                                @endif
+                            </td>
+                            <td style="color: #4b5563; font-size: 13px; font-weight: 500;">
+                                {{ $pengajuan->durasi }} Hari
+                            </td>
+                            <td>
+                                @if($pengajuan->status === 'menunggu')
+                                    <span class="status-badge status-menunggu">Menunggu Persetujuan</span>
+                                @elseif($pengajuan->status === 'disetujui')
+                                    <span class="status-badge status-disetujui">Disetujui</span>
+                                @elseif($pengajuan->status === 'ditolak')
+                                    <span class="status-badge status-ditolak">Ditolak</span>
+                                @elseif($pengajuan->status === 'dibatalkan')
+                                    <span class="status-badge status-dibatalkan">Dibatalkan</span>
+                                @endif
+                            </td>
+                            <td style="text-align: right; padding-right: 32px;">
+                                <a href="status-pengajuan.show" class="action-btn">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #6b7280; padding: 24px;">
+                                Belum ada pengajuan cuti.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 @endsection
