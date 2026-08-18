@@ -153,9 +153,25 @@
         }
 
         .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-button {
             display: flex;
             align-items: center;
             gap: 11px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .profile-button:hover {
+            background-color: #f3f4f6;
         }
 
         .user-photo {
@@ -167,8 +183,18 @@
             background-color: #f3f4f6;
         }
 
+        .profile-initial {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0d3b82;
+            background-color: #dbeafe;
+        }
+
         .user-information {
             min-width: 110px;
+            text-align: left;
         }
 
         .user-name {
@@ -182,6 +208,55 @@
             margin-top: 3px;
             color: #6b7280;
             font-size: 12px;
+        }
+
+        .profile-arrow {
+            width: 16px;
+            height: 16px;
+            color: #6b7280;
+        }
+
+        /* Dropdown khusus menu Logout */
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 160px;
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .user-profile:hover .profile-dropdown,
+        .user-profile:focus-within .profile-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 14px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .logout-button {
+            color: #dc2626;
+        }
+
+        .logout-button:hover {
+            background-color: #fee2e2;
         }
 
         .main-content {
@@ -342,21 +417,43 @@
                     @endphp
 
                     <div class="user-profile">
-                        @if($fotoKaryawan)
-                            <img src="{{ asset('storage/' . $fotoKaryawan) }}" alt="{{ $currentUser->name ?? 'User' }}" class="user-photo">
-                        @else
-                            <div class="user-photo" style="display:flex; align-items:center; justify-content:center; color:#0d3b82; font-weight:700; font-size:16px;">
-                                {{ strtoupper(substr($currentUser->name ?? 'U', 0, 1)) }}
-                            </div>
-                        @endif
+                        <button type="button" class="profile-button">
+                            @if($fotoKaryawan)
+                                <img
+                                    src="{{ asset('storage/' . $fotoKaryawan) }}"
+                                    alt="{{ $currentUser->name ?? 'User' }}"
+                                    class="user-photo"
+                                >
+                            @else
+                                <div class="user-photo profile-initial">
+                                    {{ strtoupper(substr($currentUser->name ?? 'U', 0, 1)) }}
+                                </div>
+                            @endif
 
-                        <div class="user-information">
-                            <p class="user-name">
-                                {{ $currentUser->name ?? 'User Name' }}
-                            </p>
-                            <p class="user-role">
-                                Karyawan
-                            </p>
+                            <div class="user-information">
+                                <p class="user-name">
+                                    {{ $currentUser->name ?? 'User Name' }}
+                                </p>
+                                <p class="user-role">Karyawan</p>
+                            </div>
+
+                            <svg class="profile-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        {{-- Dropdown hanya berisi tombol Logout --}}
+                        <div class="profile-dropdown">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item logout-button">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h5a2 2 0 012 2v1"/>
+                                    </svg>
+                                    Logout
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
