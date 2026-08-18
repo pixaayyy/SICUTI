@@ -353,10 +353,10 @@
         {{-- Pengajuan Terbaru --}}
         <div class="card-table-container">
             
-            <div class="table-header-flex">
+            <!-- <div class="table-header-flex">
                 <h3>Pengajuan Terbaru</h3>
                 <a href="{{ route('karyawan.cuti.index') }}">Lihat Semua →</a>
-            </div>
+            </div> -->
 
             <div class="table-responsive">
                 <table class="custom-table">
