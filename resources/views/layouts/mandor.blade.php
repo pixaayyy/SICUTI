@@ -498,8 +498,8 @@
 
                 <!-- Pengajuan Cuti -->
 
-                <a href="{{ route('mandor.pengajuan') }}"
-                   class="sidebar-menu {{ request()->routeIs('mandor.pengajuan') ? 'active' : '' }}">
+                <a href="{{ route('mandor.pengajuan.index') }}"
+                   class="sidebar-menu {{ request()->routeIs('mandor.pengajuan*') ? 'active' : '' }}"
 
                     <svg fill="none"
                          stroke="currentColor"
@@ -673,7 +673,7 @@
 
                             @forelse(Auth::user()->unreadNotifications as $notification)
 
-                                <a href="{{ route('mandor.pengajuan') }}"
+                                <a href="{{ route('mandor.pengajuan.index') }}"
                                    class="notification-item">
 
                                     <p>
