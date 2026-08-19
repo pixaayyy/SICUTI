@@ -1,7 +1,5 @@
-@extends('layouts.karyawan')
-
+@extends(Auth::user()->role === 'mandor' ? 'layouts.mandor' : (Auth::user()->role === 'karyawan' ? 'layouts.karyawan' : 'layouts.app'))
 @section('title', 'Profil Saya')
-
 @section('content')
 <!-- CSS Internal Khusus Halaman Profil -->
 <style>

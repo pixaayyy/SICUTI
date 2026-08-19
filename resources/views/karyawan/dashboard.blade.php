@@ -172,9 +172,6 @@
             color: #1e3a8a;
         }
 
-        /* =========================================================
-        CSS UNTUK POPUP MODAL (TANPA JS) MENGGUNAKAN :TARGET 
-        ========================================================= */
         .modal-window {
             position: fixed;
             background-color: rgba(0, 0, 0, 0.4);

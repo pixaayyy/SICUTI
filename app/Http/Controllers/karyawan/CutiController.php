@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanCuti;
+use App\Models\User;
+use App\Notifications\StatusCutiNotification;
 use App\Models\JenisCuti;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,11 +13,15 @@ use Carbon\Carbon;
 
 class CutiController extends Controller
 {
+    /**
+     * Halaman Ajukan Cuti
+     */
     public function create()
     {
         $user = Auth::user();
         $karyawan = $user->karyawan;
 
+        // Cek apakah akun memiliki data karyawan
         if (!$karyawan) {
             return redirect()
                 ->route('karyawan.dashboard')
@@ -24,16 +30,35 @@ class CutiController extends Controller
                 ]);
         }
 
+        // Ambil semua jenis cuti
         $jenisCutis = JenisCuti::orderBy('nama')->get();
+
+        // Jatah cuti tahunan
         $jatahCuti = 12;
+
+        // Tahun berjalan
         $tahun = Carbon::now()->year;
 
-        $cutiTerpakai = PengajuanCuti::where('karyawan_id', $karyawan->id)
-            ->where('status', 'Disetujui')
-            ->whereYear('tanggal_mulai', $tahun)
+        // Hitung cuti yang sudah disetujui
+        $cutiTerpakai = PengajuanCuti::where(
+                'karyawan_id',
+                $karyawan->id
+            )
+            ->where(
+                'status',
+                'Disetujui'
+            )
+            ->whereYear(
+                'tanggal_mulai',
+                $tahun
+            )
             ->sum('durasi');
 
-        $sisaCuti = max(0, $jatahCuti - $cutiTerpakai);
+        // Hitung sisa cuti
+        $sisaCuti = max(
+            0,
+            $jatahCuti - $cutiTerpakai
+        );
 
         return view(
             'karyawan.cuti.create',
@@ -44,11 +69,16 @@ class CutiController extends Controller
         );
     }
 
+
+    /**
+     * Menyimpan pengajuan cuti
+     */
     public function store(Request $request)
     {
         $user = Auth::user();
         $karyawan = $user->karyawan;
 
+        // Cek data karyawan
         if (!$karyawan) {
             return back()
                 ->withInput()
@@ -57,30 +87,36 @@ class CutiController extends Controller
                 ]);
         }
 
+        // Validasi form
         $validated = $request->validate([
             'jenis_cuti_id' => [
                 'required',
                 'exists:jenis_cuti,id'
             ],
+
             'tanggal_mulai' => [
                 'required',
                 'date'
             ],
+
             'tanggal_selesai' => [
                 'required',
                 'date',
                 'after_or_equal:tanggal_mulai'
             ],
+
             'alasan' => [
                 'required',
                 'string',
                 'max:1000'
             ],
+
             'catatan' => [
                 'nullable',
                 'string',
                 'max:500'
             ],
+
             'data_pendukung' => [
                 'nullable',
                 'file',
@@ -88,6 +124,11 @@ class CutiController extends Controller
                 'max:5120'
             ],
         ]);
+
+
+        // ==============================
+        // HITUNG DURASI CUTI
+        // ==============================
 
         $start = Carbon::parse(
             $validated['tanggal_mulai']
@@ -99,7 +140,13 @@ class CutiController extends Controller
 
         $durasi = $start->diffInDays($end) + 1;
 
+
+        // ==============================
+        // CEK SISA CUTI
+        // ==============================
+
         $jatahCuti = 12;
+
         $tahun = Carbon::now()->year;
 
         $cutiTerpakai = PengajuanCuti::where(
@@ -121,7 +168,13 @@ class CutiController extends Controller
             $jatahCuti - $cutiTerpakai
         );
 
+
+        // ==============================
+        // CEK APAKAH DURASI MELEBIHI SISA
+        // ==============================
+
         if ($durasi > $sisaCuti) {
+
             return back()
                 ->withInput()
                 ->withErrors([
@@ -134,9 +187,15 @@ class CutiController extends Controller
                 ]);
         }
 
+
+        // ==============================
+        // UPLOAD DOKUMEN
+        // ==============================
+
         $pathDokumen = null;
 
         if ($request->hasFile('data_pendukung')) {
+
             $pathDokumen = $request
                 ->file('data_pendukung')
                 ->store(
@@ -145,25 +204,77 @@ class CutiController extends Controller
                 );
         }
 
-        PengajuanCuti::create([
+
+        // ==============================
+        // SIMPAN PENGAJUAN CUTI
+        // ==============================
+
+        /*
+        |--------------------------------------------------------------------------
+        | PENTING
+        |--------------------------------------------------------------------------
+        | Hasil PengajuanCuti::create() disimpan ke dalam variabel
+        | $pengajuan agar bisa digunakan untuk notifikasi.
+        */
+
+        $pengajuan = PengajuanCuti::create([
             'karyawan_id' => $karyawan->id,
+
             'jenis_cuti_id' =>
                 $validated['jenis_cuti_id'],
+
             'tanggal_mulai' =>
                 $validated['tanggal_mulai'],
+
             'tanggal_selesai' =>
                 $validated['tanggal_selesai'],
+
             'durasi' =>
                 $durasi,
+
             'alasan' =>
                 $validated['alasan'],
+
             'catatan' =>
                 $validated['catatan'] ?? null,
+
             'data_pendukung' =>
                 $pathDokumen,
+
             'status' =>
                 'Menunggu',
         ]);
+
+
+        // ==============================
+        // KIRIM NOTIFIKASI KE MANDOR
+        // ==============================
+
+        $mandors = User::where(
+            'role',
+            'mandor'
+        )->get();
+
+
+        $pesan =
+            'Pengajuan cuti baru masuk dari ' .
+            $user->name;
+
+
+        foreach ($mandors as $mandor) {
+
+            $mandor->notify(
+                new StatusCutiNotification(
+                    $pengajuan,
+                    $pesan
+                )
+            );
+        }
+
+
+        // ==============================
+        // REDIRECT
+        // ==============================
 
         return redirect()
             ->route('karyawan.cuti.index')
@@ -173,12 +284,19 @@ class CutiController extends Controller
             );
     }
 
+
+    /**
+     * Riwayat Cuti Karyawan
+     */
     public function index(Request $request)
     {
         $user = Auth::user();
+
         $karyawan = $user->karyawan;
 
+        // Cek data karyawan
         if (!$karyawan) {
+
             return redirect()
                 ->route('karyawan.dashboard')
                 ->withErrors([
@@ -187,46 +305,70 @@ class CutiController extends Controller
                 ]);
         }
 
-        $jenisCutis = JenisCuti::orderBy('nama')->get();
 
-        $query = PengajuanCuti::with('jenisCuti')
+        // Ambil jenis cuti untuk filter
+        $jenisCutis = JenisCuti::orderBy(
+            'nama'
+        )->get();
+
+
+        // Query pengajuan cuti
+        $query = PengajuanCuti::with(
+                'jenisCuti'
+            )
             ->where(
                 'karyawan_id',
                 $karyawan->id
             );
 
+
+        // ==============================
+        // FILTER JENIS CUTI
+        // ==============================
+
         if ($request->filled('jenis_cuti_id')) {
+
             $query->where(
                 'jenis_cuti_id',
                 $request->jenis_cuti_id
             );
         }
 
+
+        // ==============================
+        // FILTER TANGGAL
+        // ==============================
+
         if (
             $request->filled('tanggal_dari') &&
             $request->filled('tanggal_sampai')
         ) {
+
             $query->where(function ($q) use ($request) {
+
                 $q->whereDate(
                     'tanggal_mulai',
                     '<=',
                     $request->tanggal_sampai
                 )
+
                 ->whereDate(
                     'tanggal_selesai',
                     '>=',
                     $request->tanggal_dari
                 );
             });
-        }
-        elseif ($request->filled('tanggal_dari')) {
+
+        } elseif ($request->filled('tanggal_dari')) {
+
             $query->whereDate(
                 'tanggal_selesai',
                 '>=',
                 $request->tanggal_dari
             );
-        }
-        elseif ($request->filled('tanggal_sampai')) {
+
+        } elseif ($request->filled('tanggal_sampai')) {
+
             $query->whereDate(
                 'tanggal_mulai',
                 '<=',
@@ -234,9 +376,12 @@ class CutiController extends Controller
             );
         }
 
+
+        // Ambil data terbaru
         $pengajuanCuti = $query
             ->latest()
             ->get();
+
 
         return view(
             'karyawan.cuti.index',
@@ -247,11 +392,18 @@ class CutiController extends Controller
         );
     }
 
+
+    /**
+     * Status Pengajuan Cuti
+     */
     public function status()
     {
         $karyawan = Auth::user()->karyawan;
 
+
+        // Cek data karyawan
         if (!$karyawan) {
+
             return back()
                 ->withErrors([
                     'msg' =>
@@ -259,7 +411,11 @@ class CutiController extends Controller
                 ]);
         }
 
-        $pengajuanCuti = PengajuanCuti::with('jenisCuti')
+
+        // Ambil pengajuan karyawan
+        $pengajuanCuti = PengajuanCuti::with(
+                'jenisCuti'
+            )
             ->where(
                 'karyawan_id',
                 $karyawan->id
@@ -275,9 +431,12 @@ class CutiController extends Controller
             ->latest()
             ->get();
 
+
         return view(
             'karyawan.cuti.status',
-            compact('pengajuanCuti')
+            compact(
+                'pengajuanCuti'
+            )
         );
     }
 }
