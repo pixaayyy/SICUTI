@@ -314,9 +314,9 @@
                 <label style="font-size: 11px; color: #6B7280; text-transform: uppercase; font-weight: 600;">Bukti Pendukung / Surat Sakit</label>
             </div>
             <div class="proof-box">
-                @if(!empty($detail->data_dukung))
+                @if(!empty($detail->data_pendukung))
                     @php
-                        $filePath = $detail->data_dukung;
+                        $filePath = $detail->data_pendukung;
                         
                         // Bersihkan awalan 'public/' jika tersimpan dengan format tersebut di database
                         if (Str::startsWith($filePath, 'public/')) {

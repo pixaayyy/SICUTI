@@ -41,18 +41,17 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function () {
-    Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
-    Route::get('/pengajuan/{id}', [PengajuanController::class, 'show'])->name('pengajuan.show');
-    Route::post('/pengajuan/{id}/setujui', [PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
-    Route::post('/pengajuan/{id}/tolak', [PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
-// Route Khusus Mandor
+
 Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Mandor\DashboardController::class, 'index'])->name('dashboard');    
-    Route::get('/pengajuan-cuti', function() { return 'Halaman Pengajuan Cuti'; })->name('pengajuan');
+    Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
     Route::get('/anggota-tim', function() { return 'Halaman Anggota Tim'; })->name('anggota');
     Route::get('/riwayat', function() { return 'Halaman Riwayat Persetujuan'; })->name('riwayat');
     Route::get('/profil', function() { return 'Halaman Profil Mandor'; })->name('profil');
+
+    Route::get('/pengajuan/{id}', [PengajuanController::class, 'show'])->name('pengajuan.show');
+    Route::post('/pengajuan/{id}/setujui', [PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
+    Route::post('/pengajuan/{id}/tolak', [PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
 });
 
 require __DIR__ . '/auth.php';
