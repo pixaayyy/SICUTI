@@ -9,9 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route Karyawan
 Route::middleware(['auth'])->prefix('karyawan')->name('karyawan.')->group(function () {
@@ -37,6 +37,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/profil', [ProfileController::class, 'edit'])->name('profil');        
         Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
     });
+});
+
+// Route Khusus Mandor
+Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Mandor\DashboardController::class, 'index'])->name('dashboard');    
+    Route::get('/pengajuan-cuti', function() { return 'Halaman Pengajuan Cuti'; })->name('pengajuan');
+    Route::get('/anggota-tim', function() { return 'Halaman Anggota Tim'; })->name('anggota');
+    Route::get('/riwayat', function() { return 'Halaman Riwayat Persetujuan'; })->name('riwayat');
+    Route::get('/profil', function() { return 'Halaman Profil Mandor'; })->name('profil');
 });
 
 require __DIR__ . '/auth.php';

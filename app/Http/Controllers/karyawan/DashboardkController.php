@@ -15,6 +15,20 @@ class DashboardkController extends Controller
         $karyawan = $user->karyawan;
         $tahun = date('Y'); 
 
+        // Proteksi: Jika user belum punya data di tabel karyawan, tampilkan dashboard kosong
+        if (!$karyawan) {
+            return view('karyawan.dashboard', [
+                'user' => $user,
+                'karyawan' => null,
+                'tahun' => $tahun,
+                'jatahCuti' => 0,
+                'cutiTerpakai' => 0,
+                'sisaCutiHari' => 0,
+                'cutiDitolak' => 0,
+                'pengajuanTerbaru' => []
+            ]);
+        }
+
         $dataSisaCuti = SisaCuti::where('karyawan_id', $karyawan->id)
             ->latest('tahun')
             ->first();
