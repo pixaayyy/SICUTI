@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Karyawan\CutiController;
 use App\Http\Controllers\Karyawan\DashboardkController;
+use App\Http\Controllers\Mandor\AnggotaTimController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,14 +40,48 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// Route Khusus Mandor
-Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Mandor\DashboardController::class, 'index'])->name('dashboard');    
-    Route::get('/pengajuan-cuti', function() { return 'Halaman Pengajuan Cuti'; })->name('pengajuan');
-    Route::get('/anggota-tim', function() { return 'Halaman Anggota Tim'; })->name('anggota');
-    Route::get('/riwayat', function() { return 'Halaman Riwayat Persetujuan'; })->name('riwayat');
-    Route::get('/profil', function() { return 'Halaman Profil Mandor'; })->name('profil');
-});
+// =====================================================
+// ROUTE KHUSUS MANDOR
+// =====================================================
+
+Route::middleware(['auth', 'role:mandor'])
+    ->prefix('mandor')
+    ->name('mandor.')
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', [
+            \App\Http\Controllers\Mandor\DashboardController::class,
+            'index'
+        ])->name('dashboard');
+
+
+        // Pengajuan Cuti
+        Route::get('/pengajuan-cuti', function () {
+            return 'Halaman Pengajuan Cuti';
+        })->name('pengajuan');
+
+
+        // Anggota Tim
+        Route::get('/anggota-tim', [
+            AnggotaTimController::class,
+            'index'
+        ])->name('anggota');
+
+
+        // Riwayat Persetujuan
+        Route::get('/riwayat', function () {
+            return 'Halaman Riwayat Persetujuan';
+        })->name('riwayat');
+
+
+        // Profil
+        Route::get('/profil', function () {
+            return 'Halaman Profil Mandor';
+        })->name('profil');
+
+    });
+
 
 require __DIR__ . '/auth.php';
 
