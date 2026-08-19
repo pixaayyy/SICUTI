@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Karyawan\CutiController;
 use App\Http\Controllers\Karyawan\DashboardkController;
+use App\Http\Controllers\PengajuanController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +39,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/profil', [ProfileController::class, 'edit'])->name('profil');        
         Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
     });
+});
+
+Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function () {
+    Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
+    Route::get('/pengajuan/{id}', [PengajuanController::class, 'show'])->name('pengajuan.show');
+    Route::post('/pengajuan/{id}/setujui', [PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
+    Route::post('/pengajuan/{id}/tolak', [PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
 });
 
 require __DIR__ . '/auth.php';
