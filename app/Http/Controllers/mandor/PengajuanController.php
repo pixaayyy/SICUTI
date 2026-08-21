@@ -96,4 +96,23 @@ class PengajuanController extends Controller
         $detail = PengajuanCuti::with(['karyawan', 'jenisCuti'])->findOrFail($id);
         return view('mandor.detail_pengajuan', compact('detail'));
     }
+
+    public function tolak(Request $request, $id)
+    {
+        $pengajuan = \App\Models\PengajuanCuti::findOrFail($id);
+        $pengajuan->update([
+            'status' => 'ditolak',
+        ]);
+
+        return redirect()->back()->with('success', 'Pengajuan cuti berhasil ditolak.');
+    }
+
+    public function setujui($id)
+    {
+        $pengajuan = \App\Models\PengajuanCuti::findOrFail($id);
+        $pengajuan->update([
+            'status' => 'disetujui'
+        ]);
+        return redirect()->back()->with('success', 'Pengajuan cuti berhasil disetujui.');
+    }
 }
