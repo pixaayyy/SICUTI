@@ -6,6 +6,7 @@ use App\Http\Controllers\Karyawan\CutiController;
 use App\Http\Controllers\Karyawan\DashboardkController;
 use App\Http\Controllers\Mandor\AnggotaTimController;
 use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\mandor\RiwayatController;
 
 
 Route::get('/', function () {
@@ -43,7 +44,7 @@ Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function (
     Route::get('/dashboard', [\App\Http\Controllers\Mandor\DashboardController::class, 'index'])->name('dashboard');    
     Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
     Route::get('/anggota-tim', function() { return 'Halaman Anggota Tim'; })->name('anggota');
-    Route::get('/riwayat', function() { return 'Halaman Riwayat Persetujuan'; })->name('riwayat');
+    Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
     Route::get('/profil', function() { return 'Halaman Profil Mandor'; })->name('profil');
 
     Route::get('/pengajuan/{id}', [PengajuanController::class, 'show'])->name('pengajuan.show');
