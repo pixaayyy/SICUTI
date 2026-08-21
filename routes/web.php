@@ -5,16 +5,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Karyawan\CutiController;
 use App\Http\Controllers\Karyawan\DashboardkController;
 use App\Http\Controllers\Mandor\PengajuanController;
+use App\Http\Controllers\Mandor\AnggotaTimController;
 use App\Http\Controllers\mandor\RiwayatController;
 
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route Karyawan
 Route::middleware(['auth'])->prefix('karyawan')->name('karyawan.')->group(function () {
@@ -55,6 +52,7 @@ Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function (
     Route::get('/pengajuan/{id}', [PengajuanController::class, 'show'])->name('pengajuan.show');
     Route::post('/pengajuan/{id}/setujui', [PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
     Route::post('/pengajuan/{id}/tolak', [PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
+    Route::get('/anggota-tim', [AnggotaTimController::class,'index'])->name('anggota');
 });
 
 require __DIR__ . '/auth.php';

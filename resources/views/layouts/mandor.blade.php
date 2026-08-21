@@ -32,9 +32,6 @@
         }
 
 
-        /* =====================================================
-           SIDEBAR
-           ===================================================== */
 
         .sidebar {
             width: 260px;
@@ -100,12 +97,6 @@
             width: 20px;
             height: 20px;
         }
-
-
-        /* =====================================================
-           MAIN AREA
-           ===================================================== */
-
         .main-area {
             flex: 1;
             display: flex;
@@ -114,9 +105,6 @@
         }
 
 
-        /* =====================================================
-           TOPBAR
-           ===================================================== */
 
         .topbar {
             min-height: 70px;
@@ -136,9 +124,6 @@
         }
 
 
-        /* =====================================================
-           NOTIFIKASI
-           ===================================================== */
 
         .notification-wrapper {
             position: relative;
@@ -198,7 +183,6 @@
         }
 
 
-        /* Dropdown Notifikasi */
 
         .notification-dropdown {
             display: none;
@@ -276,12 +260,6 @@
 
             font-size: 12px;
         }
-
-
-        /* =====================================================
-           USER PROFILE
-           ===================================================== */
-
         .user-profile-wrapper {
             position: relative;
         }
@@ -326,6 +304,15 @@
             font-weight: bold;
 
             flex-shrink: 0;
+
+            overflow: hidden;
+        }
+
+        .user-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .user-info {
@@ -349,13 +336,6 @@
 
             transition: transform 0.2s ease;
         }
-
-
-        /* =====================================================
-           DROPDOWN PROFILE
-           HANYA BERISI LOGOUT
-           ===================================================== */
-
         .profile-dropdown {
             display: none;
 
@@ -383,12 +363,6 @@
         .profile-dropdown.show {
             display: block;
         }
-
-
-        /* =====================================================
-           LOGOUT
-           ===================================================== */
-
         .logout-form {
             margin: 0;
         }
@@ -430,12 +404,6 @@
         .logout-button svg {
             flex-shrink: 0;
         }
-
-
-        /* =====================================================
-           MAIN CONTENT
-           ===================================================== */
-
         .main-content {
             flex: 1;
 
@@ -450,12 +418,6 @@
 <body>
 
     <div class="app-container">
-
-
-        <!-- =================================================
-             SIDEBAR
-             ================================================= -->
-
         <aside class="sidebar">
 
             <div class="sidebar-brand">
@@ -472,7 +434,7 @@
             <nav class="sidebar-nav">
 
 
-                <!-- Dashboard -->
+
 
                 <a href="{{ route('mandor.dashboard') }}"
                    class="sidebar-menu {{ request()->routeIs('mandor.dashboard') ? 'active' : '' }}">
@@ -496,10 +458,10 @@
                 </a>
 
 
-                <!-- Pengajuan Cuti -->
+
 
                 <a href="{{ route('mandor.pengajuan.index') }}"
-                   class="sidebar-menu {{ request()->routeIs('mandor.pengajuan*') ? 'active' : '' }}"
+                   class="sidebar-menu {{ request()->routeIs('mandor.pengajuan*') ? 'active' : '' }}">
 
                     <svg fill="none"
                          stroke="currentColor"
@@ -520,7 +482,7 @@
                 </a>
 
 
-                <!-- Anggota Tim -->
+
 
                 <a href="{{ route('mandor.anggota') }}"
                    class="sidebar-menu {{ request()->routeIs('mandor.anggota') ? 'active' : '' }}">
@@ -544,7 +506,7 @@
                 </a>
 
 
-                <!-- Riwayat -->
+
 
                 <a href="{{ route('mandor.riwayat') }}"
                    class="sidebar-menu {{ request()->routeIs('mandor.riwayat') ? 'active' : '' }}">
@@ -568,51 +530,43 @@
                 </a>
 
 
-                <!-- Profil -->
 
-                <a href="{{ route('profile.edit') }}"
-                   class="sidebar-menu {{ request()->routeIs('profile.*') ? 'active' : '' }}">
 
-                    <svg fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
+<a href="{{ route('profile.edit') }}"
+   class="sidebar-menu {{
+        request()->routeIs('profile.*') ||
+        request()->routeIs('karyawan.profil*') ||
+        request()->routeIs('mandor.profil*') ||
+        request()->is('karyawan/profil*') ||
+        request()->is('mandor/profil*')
+            ? 'active'
+            : ''
+   }}">
 
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                        </path>
+    <svg fill="none"
+         stroke="currentColor"
+         viewBox="0 0 24 24">
 
-                    </svg>
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+        </path>
 
-                    <span>
-                        Profil Saya
-                    </span>
+    </svg>
 
-                </a>
+    <span>
+        Profil Saya
+    </span>
+
+</a>
 
             </nav>
 
         </aside>
 
-
-        <!-- =================================================
-             MAIN AREA
-             ================================================= -->
-
         <main class="main-area">
-
-
-            <!-- =================================================
-                 TOPBAR
-                 ================================================= -->
-
             <header class="topbar">
-
-
-                <!-- ==============================
-                     NOTIFIKASI
-                     ============================== -->
 
                 <div class="notification-wrapper">
 
@@ -634,7 +588,7 @@
                         </svg>
 
 
-                        <!-- Badge Notifikasi -->
+
 
                         @if(Auth::user()->unreadNotifications->count() > 0)
 
@@ -647,7 +601,7 @@
                     </button>
 
 
-                    <!-- Dropdown Notifikasi -->
+
 
                     <div id="notificationDropdown"
                          class="notification-dropdown">
@@ -704,25 +658,33 @@
                 </div>
 
 
-                <!-- ==============================
-                     USER PROFILE
-                     ============================== -->
+
 
                 <div class="user-profile-wrapper">
 
 
-                    <!-- Tombol Profil -->
+
 
                     <button type="button"
                             class="user-profile"
                             id="profileButton">
+                    @php
+                        $user = Auth::user();
+                        $karyawan = $user->karyawan ?? null;
+                    @endphp
 
-                        <div class="user-photo">
+                    <div class="user-photo">
 
-                            {{ strtoupper(substr(Auth::user()->name ?? 'M', 0, 1)) }}
+                        @if($karyawan && $karyawan->foto)
+                            <img
+                                src="{{ asset('storage/' . $karyawan->foto) }}?v={{ optional($karyawan->updated_at)->timestamp }}"
+                                alt="Foto Profil"
+                            >
+                        @else
+                            {{ strtoupper(substr($user->name ?? 'M', 0, 1)) }}
+                        @endif
 
-                        </div>
-
+                    </div>
 
                         <div class="user-info">
 
@@ -737,7 +699,7 @@
                         </div>
 
 
-                        <!-- Panah -->
+
 
                         <svg class="profile-arrow"
                              id="profileArrow"
@@ -758,11 +720,7 @@
                     </button>
 
 
-                    <!-- ==============================
-                         DROPDOWN LOGOUT
-                         HANYA BERISI LOGOUT
-                         ============================== -->
-
+    
                     <div class="profile-dropdown"
                          id="profileDropdown">
 
@@ -810,9 +768,7 @@
             </header>
 
 
-            <!-- =================================================
-                 CONTENT
-                 ================================================= -->
+          
 
             <div class="main-content">
 
@@ -824,16 +780,9 @@
 
     </div>
 
-
-    <!-- =====================================================
-         JAVASCRIPT
-         ===================================================== -->
-
     <script>
 
-        /* =================================================
-           NOTIFIKASI
-           ================================================= */
+        
 
         function toggleNotifications() {
 
@@ -847,9 +796,6 @@
         }
 
 
-        /* =================================================
-           PROFILE
-           ================================================= */
 
         const profileButton =
             document.getElementById('profileButton');
@@ -868,10 +814,7 @@
                 event.stopPropagation();
 
 
-                /*
-                 * Tutup dropdown notifikasi
-                 * ketika profile diklik
-                 */
+            
 
                 const notificationDropdown =
                     document.getElementById('notificationDropdown');
@@ -881,16 +824,11 @@
                 }
 
 
-                /*
-                 * Buka / tutup dropdown profile
-                 */
 
                 profileDropdown.classList.toggle('show');
 
 
-                /*
-                 * Putar panah
-                 */
+             
 
                 if (profileDropdown.classList.contains('show')) {
 
@@ -909,16 +847,12 @@
         }
 
 
-        /* =================================================
-           KLIK DI LUAR DROPDOWN
-           ================================================= */
+        
 
         window.addEventListener('click', function(event) {
 
 
-            /* -------------------------------
-               Tutup Notifikasi
-               ------------------------------- */
+           
 
             const notificationWrapper =
                 document.querySelector('.notification-wrapper');
@@ -937,9 +871,7 @@
             }
 
 
-            /* -------------------------------
-               Tutup Profile
-               ------------------------------- */
+           
 
             const profileWrapper =
                 document.querySelector('.user-profile-wrapper');
