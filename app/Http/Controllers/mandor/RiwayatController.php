@@ -22,6 +22,7 @@ class RiwayatController extends Controller
         // 2. Filter Jenis Cuti
         if ($request->filled('jenis_cuti')) {
             $query->whereHas('jenisCuti', function ($q) use ($request) {
+                // Ini akan mencari teks seperti "Cuti Tahunan" di tabel jenis_cuti
                 $q->where('nama', $request->jenis_cuti);
             });
         }

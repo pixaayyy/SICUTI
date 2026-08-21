@@ -163,13 +163,26 @@
 
 <div class="main-wrapper">
     <!-- Header Halaman -->
-    <div class="page-header">
-        <h1>Pengajuan Cuti</h1>
-        <p>Daftar semua pengajuan cuti anggota tim Anda</p>
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+        
+        <!-- Bagian Kiri: Tulisan Judul -->
+        <div>
+            <h1>Pengajuan Cuti</h1>
+            <p>Daftar semua pengajuan cuti anggota tim Anda</p>
+        </div>
+
+        <a href="{{ route('mandor.pengajuan.create') }}" style="display: inline-flex; align-items: center; gap: 8px; background-color: #0B2447; color: #ffffff; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+            <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Ajukan Cuti
+        </a>
+        
     </div>
 
     <!-- Card Filter -->
     <div class="card">
+        <!-- Kode Tombol Ajukan Cuti -->
         <form action="{{ route('mandor.pengajuan.index') }}" method="GET" class="filter-section">
             <select name="status" class="form-control">
                 <option value="">Semua Status</option>

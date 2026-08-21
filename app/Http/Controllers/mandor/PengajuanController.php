@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mandor;
 
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanCuti;
+use App\Models\JenisCuti;
 use Illuminate\Http\Request;
 
 class PengajuanController extends Controller
@@ -42,6 +43,52 @@ class PengajuanController extends Controller
 
         // Panggil view pengajuan.blade.php di dalam folder views/mandor/
         return view('mandor.pengajuan', compact('pengajuan'));
+    }
+
+    public function create()
+    {
+        // Ambil data user/mandor yang sedang login
+        $user = auth()->user(); 
+
+        // Ambil semua data jenis cuti
+        $jenisCutis = JenisCuti::all();
+
+        // Ambil sisa cuti user (sesuaikan jika nama kolomnya beda)
+        $sisaCuti = $user->sisa_cuti ?? 12;
+
+        return view('mandor.ajukan_cuti', compact('jenisCutis', 'sisaCuti'));
+    }
+
+    public function store(Request $request)
+    {
+        // Validasi Input
+        $request->validate([
+            'jenis_cuti_id'   => 'required|exists:jenis_cutis,id',
+            'tanggal_mulai'   => 'required|date|after_or_equal:today',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'alasan'          => 'required|string|max:1000',
+            'catatan'         => 'nullable|string|max:255',
+            'data_pendukung'  => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $filePath = null;
+        if ($request->hasFile('data_pendukung')) {
+            $filePath = $request->file('data_pendukung')->store('dokumen_cuti', 'public');
+        }
+
+        // Simpan ke Database
+        PengajuanCuti::create([
+            'user_id'         => auth()->id(), // Sesuaikan dengan kolom ID relasi karyawan di database Anda (misal: karyawan_id)
+            'jenis_cuti_id'   => $request->jenis_cuti_id,
+            'tanggal_mulai'   => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'alasan'          => $request->alasan,
+            'catatan'         => $request->catatan,
+            'data_pendukung'  => $filePath,
+            'status'          => 'pending',
+        ]);
+
+        return redirect()->route('mandor.pengajuan.index')->with('status', 'Pengajuan cuti berhasil dikirim.');
     }
 
     public function show($id)

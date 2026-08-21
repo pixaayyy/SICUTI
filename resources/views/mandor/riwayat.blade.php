@@ -175,9 +175,10 @@
                     <label for="jenis_cuti">Jenis Cuti</label>
                     <select name="jenis_cuti" id="jenis_cuti">
                         <option value="">Semua</option>
-                        <option value="Tahunan" {{ request('jenis_cuti') == 'Tahunan' ? 'selected' : '' }}>Cuti Tahunan</option>
-                        <option value="Sakit" {{ request('jenis_cuti') == 'Sakit' ? 'selected' : '' }}>Cuti Sakit</option>
-                        <option value="Pribadi" {{ request('jenis_cuti') == 'Pribadi' ? 'selected' : '' }}>Cuti Pribadi</option>
+                        <!-- Value-nya harus persis sama dengan kolom 'nama' di DB -->
+                        <option value="Cuti Tahunan" {{ request('jenis_cuti') == 'Cuti Tahunan' ? 'selected' : '' }}>Cuti Tahunan</option>
+                        <option value="Cuti Sakit" {{ request('jenis_cuti') == 'Cuti Sakit' ? 'selected' : '' }}>Cuti Sakit</option>
+                        <option value="Cuti Khusus" {{ request('jenis_cuti') == 'Cuti Khusus' ? 'selected' : '' }}>Cuti Khusus</option>
                     </select>
                 </div>
 
@@ -192,6 +193,7 @@
                 </div>
 
                 <button type="submit" class="btn-filter">Filter</button>
+                
             </div>
         </form>
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Karyawan\CutiController;
 use App\Http\Controllers\Karyawan\DashboardkController;
-use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\Mandor\PengajuanController;
 use App\Http\Controllers\mandor\RiwayatController;
 
 
@@ -50,6 +50,8 @@ Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function (
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
     Route::get('/profil', function() { return 'Halaman Profil Mandor'; })->name('profil');
 
+    Route::get('/pengajuan/create', [PengajuanController::class, 'create'])->name('pengajuan.create'); // Form Ajukan Cuti
+    Route::post('/pengajuan/store', [PengajuanController::class, 'store'])->name('pengajuan.store');   // Simpan Cuti
     Route::get('/pengajuan/{id}', [PengajuanController::class, 'show'])->name('pengajuan.show');
     Route::post('/pengajuan/{id}/setujui', [PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
     Route::post('/pengajuan/{id}/tolak', [PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
