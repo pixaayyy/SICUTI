@@ -26,9 +26,7 @@ class SisaCuti extends Model
         'sisa' => 'integer',
     ];
 
-    /**
-     * Saldo cuti milik karyawan
-     */
+
     public function karyawan()
     {
         return $this->belongsTo(Karyawan::class);

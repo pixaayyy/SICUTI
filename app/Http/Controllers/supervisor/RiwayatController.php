@@ -13,7 +13,6 @@ class RiwayatController extends Controller
     {
         $supervisorId = Auth::id();
 
-        // Hitung statistik berdasarkan approver_id di tabel approvals
         $totalDiproses = Approval::where('approver_id', $supervisorId)
             ->whereIn('status', ['disetujui', 'ditolak'])
             ->count();
@@ -26,12 +25,10 @@ class RiwayatController extends Controller
             ->where('status', 'ditolak')
             ->count();
 
-        // Ambil data riwayat dari tabel approvals dengan relasi ke pengajuanCuti, karyawan, dan user
         $query = Approval::with(['pengajuanCuti.karyawan.user', 'pengajuanCuti.jenisCuti'])
             ->where('approver_id', $supervisorId)
             ->whereIn('status', ['disetujui', 'ditolak']);
 
-        // Fitur Pencarian berdasarkan nama karyawan atau ID pengajuan
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {

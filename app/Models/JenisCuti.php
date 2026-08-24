@@ -15,9 +15,7 @@ class JenisCuti extends Model
         'nama',
     ];
 
-    /**
-     * Jenis cuti digunakan oleh banyak pengajuan
-     */
+
     public function pengajuanCuti()
     {
         return $this->hasMany(PengajuanCuti::class);

@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Supervisor;
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanCuti;
 use App\Models\JenisCuti;
-use App\Models\Approval; // <-- Tambahkan import model Approval
+use App\Models\Approval; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth; // <-- Tambahkan import Auth
+use Illuminate\Support\Facades\Auth; 
 
 class PengajuanController extends Controller
 {
@@ -21,7 +21,6 @@ class PengajuanController extends Controller
             ->orderBy('value', 'desc')
             ->get();
 
-        // Query untuk Tabel Antrean
         $query = PengajuanCuti::with(['karyawan.user', 'jenisCuti'])
             ->where('status', 'menunggu_supervisor')
             ->latest();
@@ -36,14 +35,10 @@ class PengajuanController extends Controller
 
         $pengajuan = $query->paginate(10);
 
-        // =========================================================
-        // 💡 TAMBAHAN: HITUNG DATA UNTUK GRAFIK DISTRIBUSI JENIS CUTI
-        // =========================================================
         $chartLabels = $listJenisCuti->pluck('nama')->toArray();
         $chartData = [];
 
         foreach ($listJenisCuti as $jenis) {
-            // Menghitung jumlah pengajuan per jenis cuti
             $count = PengajuanCuti::where('jenis_cuti_id', $jenis->id)->count();
             $chartData[] = $count;
         }
@@ -67,7 +62,6 @@ class PengajuanController extends Controller
         return view('supervisor.detail_pengajuan', compact('detail'));
     }
 
-    // Aksi: Supervisor Menyetujui Pengajuan
     public function approve($id)
     {
         DB::transaction(function () use ($id) {
@@ -82,11 +76,10 @@ class PengajuanController extends Controller
                 $pengajuan->karyawan->decrement('sisa_cuti', $pengajuan->durasi);
             }
 
-            // === CATAT KE TABEL APPROVALS AGAR MASUK KE RIWAYAT KEPUTUSAN ===
             Approval::updateOrCreate(
                 [
                     'pengajuan_cuti_id' => $pengajuan->id,
-                    'approver_id' => Auth::id() // ID Supervisor yang sedang login
+                    'approver_id' => Auth::id() 
                 ],
                 [
                     'status' => 'disetujui',
@@ -100,7 +93,6 @@ class PengajuanController extends Controller
             ->with('success', 'Pengajuan cuti berhasil disetujui.');
     }
 
-    // Aksi: Supervisor Menolak Pengajuan
     public function reject(Request $request, $id)
     {
         $request->validate([
@@ -113,17 +105,15 @@ class PengajuanController extends Controller
         DB::transaction(function () use ($request, $id) {
             $pengajuan = PengajuanCuti::findOrFail($id);
 
-            // Update status menjadi ditolak
             $pengajuan->update([
                 'status' => 'ditolak',
                 'catatan_supervisor' => $request->catatan,
             ]);
 
-            // === CATAT KE TABEL APPROVALS AGAR MASUK KE RIWAYAT KEPUTUSAN ===
             Approval::updateOrCreate(
                 [
                     'pengajuan_cuti_id' => $pengajuan->id,
-                    'approver_id' => Auth::id() // ID Supervisor yang sedang login
+                    'approver_id' => Auth::id() 
                 ],
                 [
                     'status' => 'ditolak',

@@ -20,25 +20,19 @@ class Karyawan extends Model
         'foto',
     ];
 
-    /**
-     * Karyawan memiliki satu user
-     */
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Karyawan memiliki banyak pengajuan cuti
-     */
+
     public function pengajuanCuti()
     {
         return $this->hasMany(PengajuanCuti::class);
     }
 
-    /**
-     * Karyawan memiliki banyak saldo cuti
-     */
+
     public function sisaCuti()
     {
         return $this->hasMany(SisaCuti::class);

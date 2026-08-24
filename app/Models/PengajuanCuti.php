@@ -29,25 +29,19 @@ class PengajuanCuti extends Model
         'durasi' => 'integer',
     ];
 
-    /**
-     * Pengajuan milik karyawan
-     */
+
     public function karyawan()
     {
         return $this->belongsTo(Karyawan::class);
     }
 
-    /**
-     * Pengajuan memiliki satu jenis cuti
-     */
+
     public function jenisCuti()
     {
         return $this->belongsTo(JenisCuti::class);
     }
 
-    /**
-     * Pengajuan memiliki approval
-     */
+    
     public function approvals()
     {
         return $this->hasMany(Approval::class);
