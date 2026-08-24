@@ -7,6 +7,7 @@ use App\Http\Controllers\Karyawan\DashboardkController;
 use App\Http\Controllers\Mandor\PengajuanController;
 use App\Http\Controllers\Mandor\AnggotaTimController;
 use App\Http\Controllers\mandor\RiwayatController;
+use App\Http\Controllers\Supervisor\PengajuanController as SupervisorPengajuanController;
 
 
 Route::get('/', function () {
@@ -53,6 +54,11 @@ Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function (
     Route::post('/pengajuan/{id}/setujui', [PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
     Route::post('/pengajuan/{id}/tolak', [PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
     Route::get('/anggota-tim', [AnggotaTimController::class,'index'])->name('anggota');
+});
+
+Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(function () {
+    Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
+    Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
 });
 
 require __DIR__ . '/auth.php';
