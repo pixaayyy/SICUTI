@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Supervisor;
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanCuti;
 use App\Models\JenisCuti;
+use App\Models\Approval; // <-- Tambahkan import model Approval
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth; // <-- Tambahkan import Auth
 
 class PengajuanController extends Controller
 {
@@ -19,7 +21,7 @@ class PengajuanController extends Controller
             ->orderBy('value', 'desc')
             ->get();
 
-        // Hanya ambil pengajuan yang berstatus 'disetujui_mandor'
+        // Hanya ambil pengajuan yang berstatus 'menunggu_supervisor'
         $query = PengajuanCuti::with(['karyawan.user', 'jenisCuti'])
             ->where('status', 'menunggu_supervisor')
             ->latest();
@@ -44,9 +46,7 @@ class PengajuanController extends Controller
             'jenisCuti',
         ])->findOrFail($id);
 
-        // Mengarahkan ke file view detail_pengajuan milik Supervisor
         return view('supervisor.detail_pengajuan', compact('detail'));
-        // Jika file kamu ada di root supervisor, gunakan: return view('supervisor.detail_pengajuan', compact('detail'));
     }
 
     // Aksi: Supervisor Menyetujui Pengajuan
@@ -63,9 +63,22 @@ class PengajuanController extends Controller
             if ($pengajuan->karyawan && $pengajuan->karyawan->sisa_cuti >= $pengajuan->durasi) {
                 $pengajuan->karyawan->decrement('sisa_cuti', $pengajuan->durasi);
             }
+
+            // === CATAT KE TABEL APPROVALS AGAR MASUK KE RIWAYAT KEPUTUSAN ===
+            Approval::updateOrCreate(
+                [
+                    'pengajuan_cuti_id' => $pengajuan->id,
+                    'approver_id' => Auth::id() // ID Supervisor yang sedang login
+                ],
+                [
+                    'status' => 'disetujui',
+                    'catatan' => 'Pengajuan disetujui oleh Supervisor.',
+                    'approved_at' => now(),
+                ]
+            );
         });
 
-        return redirect()->route('supervisor.pengajuan.index')
+        return redirect()->route('supervisor.riwayat')
             ->with('success', 'Pengajuan cuti berhasil disetujui.');
     }
 
@@ -79,28 +92,36 @@ class PengajuanController extends Controller
             'catatan.min' => 'Alasan penolakan minimal berisi 5 karakter.',
         ]);
 
-        $pengajuan = PengajuanCuti::findOrFail($id);
+        DB::transaction(function () use ($request, $id) {
+            $pengajuan = PengajuanCuti::findOrFail($id);
 
-        // Update status menjadi ditolak
-        $pengajuan->update([
-            'status' => 'ditolak',
-            'catatan_supervisor' => $request->catatan,
-        ]);
+            // Update status menjadi ditolak
+            $pengajuan->update([
+                'status' => 'ditolak',
+                'catatan_supervisor' => $request->catatan,
+            ]);
 
-        return redirect()->route('supervisor.pengajuan.index')
+            // === CATAT KE TABEL APPROVALS AGAR MASUK KE RIWAYAT KEPUTUSAN ===
+            Approval::updateOrCreate(
+                [
+                    'pengajuan_cuti_id' => $pengajuan->id,
+                    'approver_id' => Auth::id() // ID Supervisor yang sedang login
+                ],
+                [
+                    'status' => 'ditolak',
+                    'catatan' => $request->catatan,
+                    'approved_at' => now(),
+                ]
+            );
+        });
+
+        return redirect()->route('supervisor.riwayat')
             ->with('success', 'Pengajuan cuti berhasil ditolak.');
     }
 
     public function create()
     {
-        $listJenisCuti = \App\Models\JenisCuti::all();
-
-        // Arahkan ke view ajukan_cuti.blade.php
+        $listJenisCuti = JenisCuti::all();
         return view('supervisor.ajukan_cuti', compact('listJenisCuti'));
-        
-        // Jika file berada di folder pengajuan, gunakan:
-        // return view('supervisor.pengajuan.ajukan_cuti', compact('listJenisCuti'));
     }
-
-    
 }

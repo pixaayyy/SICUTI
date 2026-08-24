@@ -8,9 +8,6 @@
     .page-header h2 { margin: 0 0 4px 0; font-size: 24px; color: #111827; font-weight: 700; }
     .page-header p { margin: 0; font-size: 14px; color: #6b7280; }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px; }
-    .stat-card { background: #fff; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; justify-content: space-between; }
-    
     .table-card { background: #fff; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; }
     
     .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
@@ -35,31 +32,6 @@
 <div class="page-header">
     <h2>Riwayat Keputusan</h2>
     <p>Tinjau seluruh permohonan cuti yang telah Anda proses.</p>
-</div>
-
-<!-- Statistik Kartu -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <span style="font-size: 12px; color: #6b7280; font-weight: 600;">TOTAL DIPROSES</span>
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 16px;">
-            <span style="font-size: 32px; font-weight: bold; color: #111827;">{{ $totalDiproses }}</span>
-            <span style="font-size: 12px; color: #6b7280;">Pengajuan</span>
-        </div>
-    </div>
-    <div class="stat-card">
-        <span style="font-size: 12px; color: #6b7280; font-weight: 600;">DISETUJUI</span>
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 16px;">
-            <span style="font-size: 32px; font-weight: bold; color: #111827;">{{ $totalDisetujui }}</span>
-            <span style="font-size: 12px; background: #eff6ff; color: #2563eb; padding: 4px 8px; border-radius: 6px; font-weight: 600;">Disetujui</span>
-        </div>
-    </div>
-    <div class="stat-card">
-        <span style="font-size: 12px; color: #6b7280; font-weight: 600;">DITOLAK</span>
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 16px;">
-            <span style="font-size: 32px; font-weight: bold; color: #111827;">{{ $totalDitolak }}</span>
-            <span style="font-size: 12px; background: #fef2f2; color: #ef4444; padding: 4px 8px; border-radius: 6px; font-weight: 600;">Ditolak</span>
-        </div>
-    </div>
 </div>
 
 <!-- Tabel Daftar Keputusan -->
