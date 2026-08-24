@@ -77,6 +77,28 @@
         height: 42px;
     }
 
+    .btn-reset {
+        background-color: #E5E7EB;
+        color: #374151;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        height: 42px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        transition: 0.2s;
+    }
+
+    .btn-reset:hover {
+        background-color: #D1D5DB;
+    }
+
     .btn-filter:hover {
         background-color: #1a3a6c;
     }
@@ -192,8 +214,11 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn-filter">Filter</button>
-                
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button type="submit" class="btn-filter">Filter</button>
+                    <a href="{{ route('mandor.riwayat') }}" class="btn-reset">Reset</a>
+                </div>
+    
             </div>
         </form>
 
