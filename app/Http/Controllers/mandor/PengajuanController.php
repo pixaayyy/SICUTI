@@ -117,10 +117,14 @@ class PengajuanController extends Controller
 
     public function setujui($id)
     {
-        $pengajuan = \App\Models\PengajuanCuti::findOrFail($id);
+        $pengajuan = PengajuanCuti::findOrFail($id);
+
         $pengajuan->update([
-            'status' => 'menunggu_supervisor'
+            'status' => 'menunggu_supervisor',
+            'catatan' => 'Disetujui oleh Mandor.',
         ]);
-        return redirect()->back()->with('success', 'Pengajuan cuti berhasil disetujui, diteruskan ke Supervisor');
+
+        return redirect()->route('mandor.pengajuan.index')
+            ->with('success', 'Pengajuan disetujui dan diteruskan ke Supervisor.');
     }
 }

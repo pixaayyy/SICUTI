@@ -1,59 +1,106 @@
 <?php
 
-namespace App\Http\Controllers\supervisor;
+namespace App\Http\Controllers\Supervisor;
 
 use App\Http\Controllers\Controller;
-use App\Models\PengajuanCuti; // Memakai Model Utama Anda
+use App\Models\PengajuanCuti;
 use App\Models\JenisCuti;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PengajuanController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Ambil daftar bulan & tahun dinamis HANYA dari data yang ada di tabel 'pengajuan_cuti'
-        $listPeriode = PengajuanCuti::selectRaw("YEAR(tanggal_mulai) as year, MONTH(tanggal_mulai) as month")
-            ->whereNotNull('tanggal_mulai')
-            ->groupBy('year', 'month')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->get()
-            ->map(function ($item) {
-                $date = Carbon::createFromDate($item->year, $item->month, 1)->locale('id');
-                return (object) [
-                    'value' => $date->format('m-Y'),
-                    'label' => $date->translatedFormat('F Y'),
-                ];
-            });
-
-        // 2. Ambil data jenis cuti untuk dropdown filter
         $listJenisCuti = JenisCuti::all();
 
-        // 3. Query data pengajuan cuti beserta relasinya
-        $query = PengajuanCuti::with(['karyawan.user', 'jenisCuti']);
+        $listPeriode = PengajuanCuti::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as value, DATE_FORMAT(created_at, '%M %Y') as label")
+            ->distinct()
+            ->orderBy('value', 'desc')
+            ->get();
 
-        // Filter berdasarkan Periode (Bulan-Tahun)
+        // Hanya ambil pengajuan yang berstatus 'disetujui_mandor'
+        $query = PengajuanCuti::with(['karyawan.user', 'jenisCuti'])
+            ->where('status', 'menunggu_supervisor')
+            ->latest();
+
         if ($request->filled('periode')) {
-            [$bulan, $tahun] = explode('-', $request->periode);
-            $query->whereMonth('tanggal_mulai', $bulan)
-                  ->whereYear('tanggal_mulai', $tahun);
+            $query->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$request->periode]);
         }
 
-        // Filter berdasarkan Jenis Cuti
         if ($request->filled('jenis_cuti')) {
             $query->where('jenis_cuti_id', $request->jenis_cuti);
         }
 
-        $pengajuan = $query->latest()->paginate(10);
+        $pengajuan = $query->paginate(10);
 
-        // Langsung mengarah ke file resources/views/supervisor/pengajuan.blade.php
         return view('supervisor.pengajuan', compact('pengajuan', 'listPeriode', 'listJenisCuti'));
     }
 
     public function show($id)
     {
-        $pengajuan = PengajuanCuti::with(['karyawan.user', 'jenisCuti', 'approvals'])->findOrFail($id);
-        return view('supervisor.pengajuan_detail', compact('pengajuan'));
+        $detail = PengajuanCuti::with([
+            'karyawan.user', 
+            'jenisCuti',
+        ])->findOrFail($id);
+
+        // Mengarahkan ke file view detail_pengajuan milik Supervisor
+        return view('supervisor.detail_pengajuan', compact('detail'));
+        // Jika file kamu ada di root supervisor, gunakan: return view('supervisor.detail_pengajuan', compact('detail'));
     }
+
+    // Aksi: Supervisor Menyetujui Pengajuan
+    public function approve($id)
+    {
+        DB::transaction(function () use ($id) {
+            $pengajuan = PengajuanCuti::with('karyawan')->findOrFail($id);
+
+            $pengajuan->update([
+                'status' => 'disetujui',
+                'catatan_supervisor' => 'Pengajuan disetujui oleh Supervisor.',
+            ]);
+
+            if ($pengajuan->karyawan && $pengajuan->karyawan->sisa_cuti >= $pengajuan->durasi) {
+                $pengajuan->karyawan->decrement('sisa_cuti', $pengajuan->durasi);
+            }
+        });
+
+        return redirect()->route('supervisor.pengajuan.index')
+            ->with('success', 'Pengajuan cuti berhasil disetujui.');
+    }
+
+    // Aksi: Supervisor Menolak Pengajuan
+    public function reject(Request $request, $id)
+    {
+        $request->validate([
+            'catatan' => 'required|string|min:5|max:500',
+        ], [
+            'catatan.required' => 'Alasan penolakan wajib diisi.',
+            'catatan.min' => 'Alasan penolakan minimal berisi 5 karakter.',
+        ]);
+
+        $pengajuan = PengajuanCuti::findOrFail($id);
+
+        // Update status menjadi ditolak
+        $pengajuan->update([
+            'status' => 'ditolak',
+            'catatan_supervisor' => $request->catatan,
+        ]);
+
+        return redirect()->route('supervisor.pengajuan.index')
+            ->with('success', 'Pengajuan cuti berhasil ditolak.');
+    }
+
+    public function create()
+    {
+        $listJenisCuti = \App\Models\JenisCuti::all();
+
+        // Arahkan ke view ajukan_cuti.blade.php
+        return view('supervisor.ajukan_cuti', compact('listJenisCuti'));
+        
+        // Jika file berada di folder pengajuan, gunakan:
+        // return view('supervisor.pengajuan.ajukan_cuti', compact('listJenisCuti'));
+    }
+
+    
 }

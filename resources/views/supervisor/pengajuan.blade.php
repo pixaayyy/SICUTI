@@ -4,6 +4,11 @@
 
 @section('content')
 <style>
+    /* Samakan semua font elemen dengan Layout Utama */
+    select, input, button, textarea, option {
+        font-family: inherit;
+    }
+
     /* Header Halaman */
     .page-header { 
         margin-bottom: 24px; 
@@ -60,6 +65,7 @@
         outline: none;
         width: 100%;
         box-sizing: border-box;
+        font-family: inherit;
     }
     .form-control:focus { 
         border-color: #0B2447; 
@@ -86,6 +92,7 @@
         align-items: center;
         gap: 8px;
         transition: background-color 0.2s;
+        font-family: inherit;
     }
     .btn-filter:hover { 
         background-color: #1a3a6c; 
@@ -107,6 +114,7 @@
         justify-content: center;
         box-sizing: border-box;
         transition: background-color 0.2s;
+        font-family: inherit;
     }
     .btn-reset:hover { 
         background-color: #E5E7EB; 
@@ -216,6 +224,7 @@
         font-weight: 600;
         text-decoration: none;
         transition: 0.2s;
+        font-family: inherit;
     }
     .btn-detail:hover { 
         background-color: #F3F4F6; 
@@ -233,16 +242,27 @@
     }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">Antrean Persetujuan</h1>
-    <p class="page-subtitle">Daftar pengajuan cuti yang telah disetujui Mandor dan menunggu keputusan Anda.</p>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <!-- Pembungkus Judul & Subtitle -->
+    <div>
+        <h1 class="page-title">Antrean Persetujuan</h1>
+        <p class="page-subtitle">Daftar pengajuan cuti yang telah disetujui Mandor dan menunggu keputusan Anda.</p>
+    </div>
+
+    <!-- Tombol di Sebelah Kanan -->
+    <a href="{{ route('supervisor.pengajuan.create') }}" style="display: inline-flex; align-items: center; gap: 8px; background-color: #0B2447; color: #ffffff; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.1); whitespace: nowrap;">
+        <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Ajukan Cuti
+    </a>
 </div>
 
 <!-- Card Filter -->
 <div class="card">
     <form method="GET" action="{{ route('supervisor.pengajuan.index') }}" class="filter-wrapper">
         
-        <!-- Filter Periode Pengajuan (Dinamis Berdasarkan Bulan di DB) -->
+        <!-- Filter Periode Pengajuan -->
         <div class="filter-group">
             <label for="periode">Periode Pengajuan</label>
             <select name="periode" id="periode" class="form-control">
@@ -255,7 +275,7 @@
             </select>
         </div>
 
-        <!-- Filter Jenis Cuti (Dinamis dari Tabel Jenis Cuti) -->
+        <!-- Filter Jenis Cuti -->
         <div class="filter-group">
             <label for="jenis_cuti">Jenis Cuti</label>
             <select name="jenis_cuti" id="jenis_cuti" class="form-control">
@@ -271,10 +291,7 @@
         <!-- Group Tombol Filter & Reset -->
         <div class="button-group">
             <button type="submit" class="btn-filter">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-                </svg>
-                Terapkan Filter
+                Filter
             </button>
             <a href="{{ route('supervisor.pengajuan.index') }}" class="btn-reset">Reset</a>
         </div>

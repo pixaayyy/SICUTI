@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Karyawan\CutiController;
 use App\Http\Controllers\Karyawan\DashboardkController;
@@ -64,9 +65,15 @@ Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function (
 // ==========================================
 Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(function () {
     Route::get('/dashboard', [SupervisorDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
+    
+    Route::get('/pengajuan/create', [SupervisorPengajuanController::class, 'create'])->name('pengajuan.create');
+    Route::post('/pengajuan/store', [SupervisorPengajuanController::class, 'store'])->name('pengajuan.store');
+    
+    // Diubah menggunakan SupervisorPengajuanController
+    Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
     Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
-
+    Route::post('/pengajuan/{id}/approve', [SupervisorPengajuanController::class, 'approve'])->name('pengajuan.approve');
+    Route::post('/pengajuan/{id}/reject', [SupervisorPengajuanController::class, 'reject'])->name('pengajuan.reject');
 });
 
 require __DIR__ . '/auth.php';

@@ -52,4 +52,8 @@ class PengajuanCuti extends Model
     {
         return $this->hasMany(Approval::class);
     }
+    public function mandor()
+    {
+        return $this->belongsTo(User::class, 'mandor_id');
+    }
 }
