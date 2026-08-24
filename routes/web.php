@@ -10,6 +10,7 @@ use App\Http\Controllers\Mandor\AnggotaTimController;
 use App\Http\Controllers\mandor\RiwayatController;
 use App\Http\Controllers\Supervisor\PengajuanController as SupervisorPengajuanController;
 use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardController;
+use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatController; // <-- TAMBAHKAN BARIS INI
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -69,11 +70,13 @@ Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(fu
     Route::get('/pengajuan/create', [SupervisorPengajuanController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan/store', [SupervisorPengajuanController::class, 'store'])->name('pengajuan.store');
     
-    // Diubah menggunakan SupervisorPengajuanController
     Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
     Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
     Route::post('/pengajuan/{id}/approve', [SupervisorPengajuanController::class, 'approve'])->name('pengajuan.approve');
     Route::post('/pengajuan/{id}/reject', [SupervisorPengajuanController::class, 'reject'])->name('pengajuan.reject');
+    Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
+    Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
+    Route::get('/riwayat-keputusan', [SupervisorRiwayatController::class, 'index'])->name('riwayat');
 });
 
 require __DIR__ . '/auth.php';

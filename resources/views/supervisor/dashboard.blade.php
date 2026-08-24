@@ -27,7 +27,8 @@
     .bg-blue { background: #eff6ff; color: #2563eb; }
     .bg-red { background: #fef2f2; color: #ef4444; }
     
-    .btn-detail { background: #f3f4f6; color: #111827; padding: 6px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px; }
+    .btn-detail { background: #f3f4f6; color: #111827; padding: 6px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px; transition: 0.2s; }
+    .btn-detail:hover { background: #e5e7eb; color: #2563eb; }
 </style>
 
 <!-- Kartu Ucapan Selamat Datang -->
@@ -66,7 +67,8 @@
     <div class="table-card">
         <div class="card-header-flex">
             <h3>Antrean Persetujuan Terbaru</h3>
-            <a href="#">Lihat Semua</a>
+            <!-- Diarahkan ke route daftar pengajuan supervisor -->
+            <a href="{{ route('supervisor.pengajuan.index') }}">Lihat Semua</a>
         </div>
         
         <table class="custom-table">
@@ -88,16 +90,19 @@
                     </td>
                     <td style="color: #4b5563;">{{ $antrean->karyawan->jabatan ?? '-' }}</td>
                     <td>
-                        <span class="badge-jenis {{ $antrean->jenisCuti->nama == 'Cuti Sakit' ? 'bg-red' : 'bg-blue' }}">
+                        <span class="badge-jenis {{ optional($antrean->jenisCuti)->nama == 'Cuti Sakit' ? 'bg-red' : 'bg-blue' }}">
                             {{ $antrean->jenisCuti->nama ?? '-' }}
                         </span>
                     </td>
                     <td style="color: #4b5563;">{{ \Carbon\Carbon::parse($antrean->tanggal_mulai)->format('d M Y') }}</td>
-                    <td><a href="#" class="btn-detail">Detail</a></td>
+                    <td>
+                        <!-- Tombol Detail mengarah ke route detail pengajuan berdasarkan ID -->
+                        <a href="{{ route('supervisor.pengajuan.show', $antrean->id) }}" class="btn-detail">Detail</a>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" style="text-align: center; color: #6b7280;">Tidak ada antrean persetujuan.</td>
+                    <td colspan="5" style="text-align: center; color: #6b7280; padding: 24px;">Tidak ada antrean persetujuan.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -119,7 +124,6 @@
         const dataLabels = @json($chartLabels);
         const dataValues = @json($chartData);
         
-        // Jika data kosong, tampilkan dummy agar grafik tidak kosong
         const finalLabels = dataValues.length > 0 ? dataLabels : ['Belum Ada Data'];
         const finalValues = dataValues.length > 0 ? dataValues : [1];
         const colors = dataValues.length > 0 ? ['#0B2447', '#2563eb', '#bfdbfe', '#ef4444'] : ['#e5e7eb'];
@@ -137,7 +141,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '75%', // Ketebalan lingkaran
+                cutout: '75%',
                 plugins: {
                     legend: { position: 'bottom' }
                 }
