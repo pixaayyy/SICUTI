@@ -14,7 +14,6 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // 1. Statistik Card
         $menunggu = PengajuanCuti::where('status', 'menunggu_supervisor')->count();
         $disetujui = PengajuanCuti::where('status', 'disetujui')
             ->whereMonth('created_at', now()->month)
@@ -23,21 +22,18 @@ class DashboardController extends Controller
             ->whereMonth('created_at', now()->month)
             ->count();
 
-        // 2. Tabel Antrean Terbaru
         $antreanTerbaru = PengajuanCuti::with(['karyawan.user', 'jenisCuti'])
             ->where('status', 'menunggu_supervisor')
             ->latest()
             ->take(5)
             ->get();
 
-        // 3. Data Grafik Donut (Hitung semua pengajuan berdasarkan jenis cuti)
         $jenisCutiList = JenisCuti::all();
         $chartLabels = [];
         $chartData = [];
 
         foreach ($jenisCutiList as $jenis) {
             $chartLabels[] = $jenis->nama;
-            // Hitung total pengajuan untuk jenis cuti ini tanpa membatasi status
             $chartData[] = PengajuanCuti::where('jenis_cuti_id', $jenis->id)->count();
         }
 

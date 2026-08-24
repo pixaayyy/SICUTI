@@ -23,17 +23,12 @@ class Approval extends Model
         'approved_at' => 'datetime',
     ];
 
-    /**
-     * Approval milik pengajuan cuti
-     */
+
     public function pengajuanCuti()
     {
         return $this->belongsTo(PengajuanCuti::class);
     }
 
-    /**
-     * Approver adalah user
-     */
     public function approver()
     {
         return $this->belongsTo(User::class, 'approver_id');

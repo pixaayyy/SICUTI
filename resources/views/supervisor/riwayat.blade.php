@@ -3,29 +3,120 @@
 
 @section('content')
 <style>
-    /* Styling konsisten dengan Dashboard Supervisor */
-    .page-header { margin-bottom: 24px; }
-    .page-header h2 { margin: 0 0 4px 0; font-size: 24px; color: #111827; font-weight: 700; }
-    .page-header p { margin: 0; font-size: 14px; color: #6b7280; }
+    .page-header {
+        margin-bottom: 24px;
+    }
 
-    .table-card { background: #fff; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; }
-    
-    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
-    .card-header-flex h3 { margin: 0; font-size: 16px; color: #111827; font-weight: 700; }
-    
-    .search-input { padding: 8px 12px 8px 36px; font-size: 13px; border: 1px solid #d1d5db; border-radius: 8px; outline: none; width: 260px; }
-    .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1); }
+    .page-header h2 {
+        margin: 0 0 4px 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: #111827;
+    }
 
-    .custom-table { width: 100%; border-collapse: collapse; text-align: left; }
-    .custom-table th { padding: 12px 16px; font-size: 11px; color: #6b7280; border-bottom: 1px solid #e5e7eb; text-transform: uppercase; font-weight: 600; }
-    .custom-table td { padding: 16px; font-size: 13px; border-bottom: 1px solid #f3f4f6; color: #111827; vertical-align: middle; }
-    
-    .badge-status { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
-    .bg-blue { background: #eff6ff; color: #2563eb; }
-    .bg-red { background: #fef2f2; color: #ef4444; }
-    
-    .btn-detail { background: #eff6ff; color: #2563eb; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .btn-detail:hover { background: #dbeafe; }
+    .page-header p {
+        margin: 0;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .table-card {
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        background-color: #ffffff;
+    }
+
+    .card-header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .card-header-flex h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .search-input {
+        width: 260px;
+        padding: 8px 12px 8px 36px;
+        font-size: 13px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        outline: none;
+    }
+
+    .search-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .custom-table th {
+        padding: 12px 16px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .custom-table td {
+        padding: 16px;
+        font-size: 13px;
+        color: #111827;
+        vertical-align: middle;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .bg-blue {
+        background-color: #eff6ff;
+        color: #2563eb;
+    }
+
+    .bg-red {
+        background-color: #fef2f2;
+        color: #ef4444;
+    }
+
+    .btn-detail {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 14px;
+        border-radius: 6px;
+        background-color: #eff6ff;
+        color: #2563eb;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+
+    .btn-detail:hover {
+        background-color: #dbeafe;
+    }
 </style>
 
 <!-- Header Halaman -->
