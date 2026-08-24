@@ -22,18 +22,14 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// ==========================================
-// ROUTE PROFILE DEFAULT
-// ==========================================
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ==========================================
-// ROUTES KHUSUS KARYAWAN
-// ==========================================
+// role karyawan
 Route::middleware(['auth'])->prefix('karyawan')->name('karyawan.')->group(function () {
     Route::get('/dashboard', [DashboardkController::class, 'index'])->name('dashboard');
     Route::get('/ajukan-cuti', [CutiController::class, 'create'])->name('cuti.create');
@@ -44,9 +40,7 @@ Route::middleware(['auth'])->prefix('karyawan')->name('karyawan.')->group(functi
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
 });
 
-// ==========================================
-// ROUTES KHUSUS MANDOR
-// ==========================================
+// role mandor
 Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Mandor\DashboardController::class, 'index'])->name('dashboard');    
     Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
@@ -61,9 +55,7 @@ Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function (
     Route::get('/anggota-tim', [AnggotaTimController::class,'index'])->name('anggota');
 });
 
-// ==========================================
-// ROUTES KHUSUS SUPERVISOR
-// ==========================================
+// role supervisor
 Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(function () {
     Route::get('/dashboard', [SupervisorDashboardController::class, 'index'])->name('dashboard');
     

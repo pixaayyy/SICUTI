@@ -13,9 +13,8 @@ class DashboardkController extends Controller
     {
         $user = Auth::user();
         $karyawan = $user->karyawan;
-        $tahun = date('Y'); 
-
-        // Proteksi: Jika user belum punya data di tabel karyawan, tampilkan dashboard kosong
+        $tahun = date('Y');
+        
         if (!$karyawan) {
             return view('karyawan.dashboard', [
                 'user' => $user,
@@ -32,12 +31,12 @@ class DashboardkController extends Controller
         $dataSisaCuti = SisaCuti::where('karyawan_id', $karyawan->id)
             ->latest('tahun')
             ->first();
-            
+
         $jatahCuti = $dataSisaCuti->jatah ?? 12;
 
         $cutiTerpakai = PengajuanCuti::where('karyawan_id', $karyawan->id)
             ->whereYear('tanggal_mulai', $tahun)
-            ->where('status', 'disetujui') 
+            ->where('status', 'disetujui')
             ->sum('durasi');
 
         $sisaCutiHari = $jatahCuti - $cutiTerpakai;
