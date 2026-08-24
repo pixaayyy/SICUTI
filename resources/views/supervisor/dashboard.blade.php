@@ -121,12 +121,19 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const ctx = document.getElementById('cutiChart').getContext('2d');
-        const dataLabels = @json($chartLabels);
-        const dataValues = @json($chartData);
+        const dataLabels = @json($chartLabels ?? []);
+        const dataValues = @json($chartData ?? []);
         
-        const finalLabels = dataValues.length > 0 ? dataLabels : ['Belum Ada Data'];
-        const finalValues = dataValues.length > 0 ? dataValues : [1];
-        const colors = dataValues.length > 0 ? ['#0B2447', '#2563eb', '#bfdbfe', '#ef4444'] : ['#e5e7eb'];
+        // Hitung total seluruh nilai data
+        const totalData = dataValues.reduce((acc, curr) => acc + Number(curr), 0);
+        const hasData = totalData > 0;
+
+        // Jika ada data, gunakan label & nilai asli. Jika 0, tampilkan placeholder.
+        const finalLabels = hasData ? dataLabels : ['Belum Ada Data'];
+        const finalValues = hasData ? dataValues : [1];
+        const colors = hasData 
+            ? ['#0B2447', '#2563eb', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'] 
+            : ['#e5e7eb'];
 
         new Chart(ctx, {
             type: 'doughnut',

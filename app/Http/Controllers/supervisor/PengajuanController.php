@@ -21,7 +21,7 @@ class PengajuanController extends Controller
             ->orderBy('value', 'desc')
             ->get();
 
-        // Hanya ambil pengajuan yang berstatus 'menunggu_supervisor'
+        // Query untuk Tabel Antrean
         $query = PengajuanCuti::with(['karyawan.user', 'jenisCuti'])
             ->where('status', 'menunggu_supervisor')
             ->latest();
@@ -36,7 +36,25 @@ class PengajuanController extends Controller
 
         $pengajuan = $query->paginate(10);
 
-        return view('supervisor.pengajuan', compact('pengajuan', 'listPeriode', 'listJenisCuti'));
+        // =========================================================
+        // 💡 TAMBAHAN: HITUNG DATA UNTUK GRAFIK DISTRIBUSI JENIS CUTI
+        // =========================================================
+        $chartLabels = $listJenisCuti->pluck('nama')->toArray();
+        $chartData = [];
+
+        foreach ($listJenisCuti as $jenis) {
+            // Menghitung jumlah pengajuan per jenis cuti
+            $count = PengajuanCuti::where('jenis_cuti_id', $jenis->id)->count();
+            $chartData[] = $count;
+        }
+
+        return view('supervisor.pengajuan', compact(
+            'pengajuan', 
+            'listPeriode', 
+            'listJenisCuti', 
+            'chartLabels', 
+            'chartData'
+        ));
     }
 
     public function show($id)
