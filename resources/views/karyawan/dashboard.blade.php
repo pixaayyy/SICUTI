@@ -180,7 +180,6 @@
             bottom: 0;
             left: 0;
             z-index: 999;
-            /* Disembunyikan secara default */
             opacity: 0;
             pointer-events: none;
             transition: all 0.3s;
@@ -189,7 +188,6 @@
             align-items: center;
         }
 
-        /* Modal akan muncul saat ID-nya ditargetkan oleh URL (href) */
         .modal-window:target {
             opacity: 1;
             pointer-events: auto;
@@ -202,7 +200,6 @@
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            /* Efek pop-art muncul dari bawah sedikit */
             transform: translateY(-20px);
             transition: all 0.3s;
         }
@@ -260,11 +257,25 @@
             color: #111827;
             font-weight: 500;
         }
+        .rejection-reason-row {
+            align-items: flex-start;
+        }
+
+        .rejection-reason {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            padding: 10px 12px;
+            border-radius: 8px;
+            line-height: 1.5;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: -3px;
+        }
     </style>
 
     <div class="dashboard-container">
 
-        {{-- Greeting --}}
         <div class="greeting-section mb-8">
             <h2>Halo, {{ $user->name }}</h2>
             <p>
@@ -272,10 +283,8 @@
             </p>
         </div>
 
-        {{-- Statistik --}}
         <div class="stats-grid">
 
-            {{-- Sisa Cuti --}}
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon blue">
@@ -294,7 +303,6 @@
                 </div>
             </div>
 
-            {{-- Cuti Terpakai --}}
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon blue">
@@ -312,7 +320,6 @@
                 </div>
             </div>
 
-            {{-- Cuti Ditolak --}}
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon red">
@@ -330,7 +337,6 @@
                 </div>
             </div>
 
-            {{-- Cuti Tahun Ini --}}
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon gray">
@@ -347,13 +353,7 @@
 
         </div>
 
-        {{-- Pengajuan Terbaru --}}
         <div class="card-table-container">
-            
-            <!-- <div class="table-header-flex">
-                <h3>Pengajuan Terbaru</h3>
-                <a href="{{ route('karyawan.cuti.index') }}">Lihat Semua →</a>
-            </div> -->
 
             <div class="table-responsive">
                 <table class="custom-table">
@@ -393,7 +393,6 @@
                                     @endif
                                 </td>
                                 <td style="text-align: right; padding-right: 32px;">
-                                    <!-- BAGIAN INI DIUBAH: href diarahkan ke ID modal yang sesuai -->
                                     <a href="#modal-detail-{{ $pengajuan->id }}" class="action-btn">
                                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -421,7 +420,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Detail Pengajuan Cuti</h3>
-                <!-- Link '#' akan menghapus ID target dari URL, sehingga modal tertutup -->
                 <a href="#" class="modal-close" title="Tutup">&times;</a>
             </div>
             
@@ -459,8 +457,20 @@
                 </div>
                 <div class="detail-row">
                     <div class="detail-label">Keterangan</div>
-                    <div class="detail-value">: {{ $pengajuan->keterangan ?? '-' }}</div>
+                    <div class="detail-value">: {{ $pengajuan->alasan ?? '-' }}</div>
                 </div>
+
+                @if($pengajuan->status === 'ditolak')
+                    <div class="detail-row rejection-reason-row">
+                        <div class="detail-label">Alasan Penolakan</div>
+                        <div class="detail-value">
+                            <div class="rejection-reason">
+                                {{ $pengajuan->catatan ?? 'Tidak ada alasan penolakan.' }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="detail-row">
                     <div class="detail-label">Lampiran Surat</div>
                     <div class="detail-value" style="flex: 1;">: 

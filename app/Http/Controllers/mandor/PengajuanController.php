@@ -83,9 +83,9 @@ class PengajuanController extends Controller
             'tanggal_mulai'   => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'alasan'          => $request->alasan,
-            'catatan'         => $request->catatan,
+            'catatan'         => null,
             'data_pendukung'  => $filePath,
-            'status'          => 'pending',
+            'status'          => 'menunggu',
         ]);
 
         return redirect()->route('mandor.pengajuan.index')->with('status', 'Pengajuan cuti berhasil dikirim.');
@@ -99,9 +99,17 @@ class PengajuanController extends Controller
 
     public function tolak(Request $request, $id)
     {
+        // 1. Validasi bahwa catatan penolakan wajib diisi
+        $request->validate([
+            'catatan' => 'required|string|max:255'
+        ]);
+
         $pengajuan = \App\Models\PengajuanCuti::findOrFail($id);
+        
+        // 2. Update status DAN simpan catatannya
         $pengajuan->update([
             'status' => 'ditolak',
+            'catatan' => $request->catatan // Mengambil dari textarea form Mandor
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan cuti berhasil ditolak.');

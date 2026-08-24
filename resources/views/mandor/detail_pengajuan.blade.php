@@ -230,6 +230,157 @@
         background-color: #F3F4F6; 
         color: #4B5563; 
     }
+    .reject-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .reject-modal.show {
+        display: flex;
+    }
+
+    .reject-modal-content {
+        width: 100%;
+        max-width: 500px;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        animation: rejectModalShow 0.2s ease-out;
+    }
+
+    @keyframes rejectModalShow {
+        from {
+            opacity: 0;
+            transform: translateY(-15px) scale(0.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .reject-modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 20px 22px;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .reject-modal-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .reject-modal-header p {
+        margin: 5px 0 0;
+        font-size: 13px;
+        color: #6B7280;
+    }
+
+    .reject-close {
+        border: none;
+        background: transparent;
+        font-size: 27px;
+        color: #6B7280;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .reject-close:hover {
+        color: #111827;
+    }
+
+    .reject-modal-body {
+        padding: 22px;
+    }
+
+    .reject-modal-body label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .reject-modal-body label span {
+        color: #DC2626;
+    }
+
+    .reject-modal-body textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 12px;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 13px;
+        color: #111827;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .reject-modal-body textarea:focus {
+        border-color: #DC2626;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+    }
+
+    .reject-modal-body small {
+        display: block;
+        margin-top: 7px;
+        font-size: 11px;
+        color: #9CA3AF;
+    }
+
+    .reject-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 16px 22px;
+        background: #F9FAFB;
+        border-top: 1px solid #E5E7EB;
+    }
+
+    .btn-cancel-reject {
+        padding: 10px 18px;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #374151;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-cancel-reject:hover {
+        background: #F3F4F6;
+    }
+
+    .btn-confirm-reject {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        background: #DC2626;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-confirm-reject:hover {
+        background: #B91C1C;
+    }
 </style>
 
 <div class="top-header">
@@ -375,12 +526,103 @@
                 <button type="submit" class="btn-approve">✓ SETUJUI PENGAJUAN</button>
             </form>
 
-            <form action="{{ route('mandor.pengajuan.tolak', $detail->id) }}" method="POST" style="margin-top: 10px;">
+            <form action="{{ route('mandor.pengajuan.tolak', $detail->id) }}"
+                method="POST"
+                style="margin-top: 10px;"
+                id="rejectForm">
                 @csrf
-                <button type="submit" class="btn-reject">✕ TOLAK PENGAJUAN</button>
+
+                <button type="button"
+                        class="btn-reject"
+                        onclick="openRejectModal()">
+                    ✕ TOLAK PENGAJUAN
+                </button>
+
+                <!-- MODAL ALASAN PENOLAKAN -->
+                <div id="rejectModal" class="reject-modal">
+                    <div class="reject-modal-content">
+
+                        <div class="reject-modal-header">
+                            <div>
+                                <h3>Alasan Penolakan</h3>
+                                <p>Berikan alasan mengapa pengajuan cuti ini ditolak.</p>
+                            </div>
+
+                            <button type="button"
+                                    class="reject-close"
+                                    onclick="closeRejectModal()">
+                                &times;
+                            </button>
+                        </div>
+
+                        <div class="reject-modal-body">
+
+                            <label for="catatan">
+                                Alasan Penolakan <span>*</span>
+                            </label>
+
+                            <textarea
+                                name="catatan"
+                                id="catatan"
+                                rows="5"
+                                placeholder="Contoh: Pengajuan cuti ditolak karena kebutuhan operasional tim..."
+                                required></textarea>
+
+                            <small>
+                                Alasan ini akan dikirimkan kepada karyawan.
+                            </small>
+
+                        </div>
+
+                        <div class="reject-modal-footer">
+                            <button type="button"
+                                    class="btn-cancel-reject"
+                                    onclick="closeRejectModal()">
+                                Batal
+                            </button>
+
+                            <button type="submit"
+                                    class="btn-confirm-reject">
+                                ✕ Tolak Pengajuan
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
         @endif
     </div>
 </div>
+
+<script>
+    function openRejectModal() {
+        const modal = document.getElementById('rejectModal');
+        const textarea = document.getElementById('catatan');
+
+        modal.classList.add('show');
+
+        setTimeout(() => {
+            textarea.focus();
+        }, 100);
+    }
+
+    function closeRejectModal() {
+        const modal = document.getElementById('rejectModal');
+        modal.classList.remove('show');
+    }
+
+    // Tutup modal jika klik area luar popup
+    document.getElementById('rejectModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeRejectModal();
+        }
+    });
+
+    // Tutup dengan tombol ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeRejectModal();
+        }
+    });
+</script>
 @endsection
