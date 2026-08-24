@@ -9,6 +9,7 @@ use App\Http\Controllers\Mandor\AnggotaTimController;
 use App\Http\Controllers\mandor\RiwayatController;
 use App\Http\Controllers\Supervisor\PengajuanController as SupervisorPengajuanController;
 use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardController;
+use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatController; // <-- TAMBAHKAN BARIS INI
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -64,9 +65,9 @@ Route::middleware(['auth'])->prefix('mandor')->name('mandor.')->group(function (
 // ==========================================
 Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(function () {
     Route::get('/dashboard', [SupervisorDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
+    Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
     Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
-
+    Route::get('/riwayat-keputusan', [SupervisorRiwayatController::class, 'index'])->name('riwayat');
 });
 
 require __DIR__ . '/auth.php';

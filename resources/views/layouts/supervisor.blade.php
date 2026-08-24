@@ -345,7 +345,7 @@
                 </a>
 
                 <!-- 2. Pengajuan Cuti -->
-                <a href="#"
+                <a href="{{ route('supervisor.pengajuan.index') }}"
                    class="sidebar-menu {{ request()->routeIs('supervisor.pengajuan*') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -353,8 +353,8 @@
                     <span>Pengajuan Cuti</span>
                 </a>
 
-                <!-- 3. Riwayat Persetujuan -->
-                <a href="#"
+                <!-- 3. Riwayat Persetujuan (Diubah mengarah ke route riwayat supervisor) -->
+                <a href="{{ route('supervisor.riwayat') }}"
                    class="sidebar-menu {{ request()->routeIs('supervisor.riwayat*') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -362,9 +362,9 @@
                     <span>Riwayat Persetujuan</span>
                 </a>
 
-                <!-- 4. Profil Saya -->
+             <!-- 4. Profil Saya -->
                 <a href="{{ route('profile.edit') }}"
-                   class="sidebar-menu {{ request()->routeIs('profile.*') || request()->routeIs('supervisor.profil*') ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs('profile.*') || request()->is('profile*') || request()->routeIs('supervisor.profil*') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
@@ -436,9 +436,9 @@
                 </div>
             </header>
 
-            <div class="main-content">
+            <main class="main-content">
                 @yield('content')
-            </div>
+            </main>
         </main>
     </div>
 
