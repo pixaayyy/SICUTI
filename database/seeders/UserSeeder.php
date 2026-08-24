@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Karyawan;
 use App\Models\SisaCuti;
-use App\Models\PengajuanCuti; // Wajib ditambahkan
+use App\Models\PengajuanCuti;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $karyawanUser = User::create([
             'name' => 'Aji Santoso',
             'username' => 'aji_santoso',
-            'email' => 'karyawan@gmail.com',
+            'email' => 'ajisantoso@gmail.com',
             'password' => Hash::make('1233'),
             'role' => 'karyawan',
         ]);
@@ -81,6 +81,31 @@ class UserSeeder extends Seeder
 
         SisaCuti::create([
             'karyawan_id' => $mandor1->id,
+            'tahun' => 2026,
+            'sisa_cuti' => 12,
+            'cuti_terpakai' => 0,
+        ]);
+
+        // 3. Akun Supervisor (BARU DITAMBAHKAN)
+        $supervisorUser = User::create([
+            'name' => 'Citra Lestari (Supervisor)',
+            'username' => 'supervisor1',
+            'email' => 'supervisor@gmail.com',
+            'password' => Hash::make('1235'), // Password diset 1235
+            'role' => 'supervisor',
+        ]);
+
+        $supervisor1 = Karyawan::create([
+            'user_id' => $supervisorUser->id,
+            'nik' => '330112233445',
+            'jabatan' => 'Supervisor Produksi',
+            'departemen' => 'Produksi',
+            'no_telepon' => '085612345678',
+            'tanggal_bergabung' => Carbon::parse('2020-03-20'),
+        ]);
+
+        SisaCuti::create([
+            'karyawan_id' => $supervisor1->id,
             'tahun' => 2026,
             'sisa_cuti' => 12,
             'cuti_terpakai' => 0,
