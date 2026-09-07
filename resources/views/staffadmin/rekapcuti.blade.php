@@ -195,45 +195,45 @@
                 <tbody>
                     @forelse($karyawans as $row)
                     @php
-                        // Ambil data sisa cuti
-                        $sisaCuti = $row->sisaCuti->first();
+                    // Ambil data sisa cuti jika tersedia
+                    $sisaCuti = $row->sisaCuti?->first();
 
-                        // Jatah dan pemakaian cuti
-                        $jatahCuti = $sisaCuti->jatah ?? 12;
-                        $cutiDiambil = $sisaCuti->terpakai ?? 0;
+                    // Kalau belum ada data sisa cuti, gunakan nilai default
+                    $jatahCuti = $sisaCuti?->jatah ?? 12;
+                    $cutiDiambil = $sisaCuti?->terpakai ?? 0;
 
-                        // Sisa cuti
-                        $sisa = $sisaCuti->sisa ?? ($jatahCuti - $cutiDiambil);
+                    // Hitung sisa cuti
+                    $sisa = $sisaCuti?->sisa ?? ($jatahCuti - $cutiDiambil);
 
-                        // Status
-                        if ($sisa <= 0) {
-                            $status = 'Habis';
-                            $statusClass = 'badge-habis';
-                            $numberClass = 'text-red';
-                        } elseif ($sisa <= 3) {
-                            $status = 'Kritis';
-                            $statusClass = 'badge-kritis';
-                            $numberClass = 'text-orange';
-                        } else {
-                            $status = 'Aman';
-                            $statusClass = 'badge-aman';
-                            $numberClass = 'text-blue';
-                        }
+                    // Status
+                    if ($sisa <= 0) {
+                        $status = 'Habis';
+                        $statusClass = 'badge-habis';
+                        $numberClass = 'text-red';
+                    } elseif ($sisa <= 3) {
+                        $status = 'Kritis';
+                        $statusClass = 'badge-kritis';
+                        $numberClass = 'text-orange';
+                    } else {
+                        $status = 'Aman';
+                        $statusClass = 'badge-aman';
+                        $numberClass = 'text-blue';
+                    }
 
-                        // Nama karyawan
-                        $nama = $row->user->name
-                            ?? $row->nama
-                            ?? $row->name
-                            ?? 'Karyawan';
+                    // Nama karyawan
+                    $nama = $row->user->name
+                        ?? $row->nama
+                        ?? $row->name
+                        ?? 'Karyawan';
 
-                        // Inisial
-                        $words = preg_split('/\s+/', trim($nama));
+                    // Inisial
+                    $words = preg_split('/\s+/', trim($nama));
 
-                        $initials = strtoupper(
-                            substr($words[0] ?? 'K', 0, 1) .
-                            substr($words[1] ?? '', 0, 1)
-                        );
-                    @endphp
+                    $initials = strtoupper(
+                        substr($words[0] ?? 'K', 0, 1) .
+                        substr($words[1] ?? '', 0, 1)
+                    );
+                @endphp
                     <tr>
                         <td>
                             <div class="emp-cell">
