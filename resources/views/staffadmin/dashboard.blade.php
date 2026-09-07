@@ -53,7 +53,6 @@
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-lg font-bold text-gray-900">Tren Cuti 6 Bulan Terakhir</h2>
-            <a href="{{ route('staffadmin.riwayat') }}" class="text-sm font-medium text-blue-600 hover:underline">Lihat Detail &gt;</a>
         </div>
         <div class="relative w-full h-80">
             <canvas id="trenCutiChart"></canvas>
