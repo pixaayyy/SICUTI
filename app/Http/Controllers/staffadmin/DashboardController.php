@@ -11,12 +11,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Total Pengajuan Selesai / Disetujui
-        // (Sesuaikan string 'approved' dengan nilai status di database Anda, misal: 'approved', 'selesai', atau 'disetujui')
-        $total_selesai = PengajuanCuti::where('status', 'approved')->count();
+        // 1. Total Pengajuan Selesai (Di-acc Supervisor)
+        $total_selesai = PengajuanCuti::where('status', 'disetujui')->count();
 
-        // 2. Total Karyawan Unik yang Cuti pada Bulan Ini
-        $karyawan_cuti = PengajuanCuti::whereYear('tanggal_mulai', Carbon::now()->year)
+        // 2. Total Karyawan Unik yang Cuti pada Bulan Ini (Berdasarkan yang di-acc Supervisor)
+        $karyawan_cuti = PengajuanCuti::where('status', 'disetujui')
+            ->whereYear('tanggal_mulai', Carbon::now()->year)
             ->whereMonth('tanggal_mulai', Carbon::now()->month)
             ->distinct('karyawan_id')
             ->count('karyawan_id');
@@ -30,15 +30,13 @@ class DashboardController extends Controller
 
         for ($i = 5; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
-            $chartLabels[] = $date->translatedFormat('M'); // Contoh: Okt, Nov, Des, Jan, Feb, Mar
-            
-            // Menghitung jumlah pengajuan berdasarkan bulan pembuatan data
+            $chartLabels[] = $date->translatedFormat('M');
+
             $chartData[] = PengajuanCuti::whereYear('created_at', $date->year)
                 ->whereMonth('created_at', $date->month)
                 ->count();
         }
 
-        // Me-return view dashboard dan passing data dinamis ke view
         return view('staffadmin.dashboard', compact(
             'total_selesai',
             'karyawan_cuti',
