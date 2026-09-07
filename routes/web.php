@@ -12,8 +12,7 @@ use App\Http\Controllers\Supervisor\PengajuanController as SupervisorPengajuanCo
 use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardController;
 use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatController; // <-- TAMBAHKAN BARIS INI
 use App\Http\Controllers\StaffAdmin\DashboardController;
-use App\Http\Controllers\StaffAdmin\RekapCutiController; // Pastikan controller ini di-use
-
+use App\Http\Controllers\StaffAdmin\RekapCutiController;
 
 Route::get('/', function () {
     if (Auth::check()) {

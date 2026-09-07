@@ -35,6 +35,6 @@ class Karyawan extends Model
 
     public function sisaCuti()
     {
-        return $this->hasMany(SisaCuti::class);
+        return $this->hasOne(SisaCuti::class);
     }
 }

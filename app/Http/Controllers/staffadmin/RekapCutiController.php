@@ -1,16 +1,50 @@
 <?php
+
+namespace App\Http\Controllers\StaffAdmin;
+
 use App\Http\Controllers\Controller;
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
-use App\Models\Karyawan; // Sesuaikan dengan model kamu
 
 class RekapCutiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $karyawans = Karyawan::with('sisaCuti')->paginate(10);
+        // Tahun yang dipilih
+        $tahun = $request->get('tahun', now()->year);
 
-        // Memanggil file rekap-cuti.blade.php di dalam folder staffadmin
-        return view('staffadmin.rekapcuti', compact('karyawans'));
+        // Departemen yang dipilih
+        $departemen = $request->get('departemen');
+
+        // Query karyawan
+        $query = Karyawan::with([
+            'user',
+            'sisaCuti'
+        ]);
+
+        // Filter departemen
+        if (!empty($departemen)) {
+            $query->where('departemen', $departemen);
+        }
+
+        // Ambil data karyawan
+        $karyawans = $query
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Ambil daftar departemen dari database
+        $departemens = Karyawan::whereNotNull('departemen')
+            ->where('departemen', '!=', '')
+            ->distinct()
+            ->orderBy('departemen')
+            ->pluck('departemen');
+
+        return view('staffadmin.rekapcuti', compact(
+            'karyawans',
+            'departemens',
+            'tahun',
+            'departemen'
+        ));
     }
 }
-?>
