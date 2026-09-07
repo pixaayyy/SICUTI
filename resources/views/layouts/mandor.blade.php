@@ -97,6 +97,7 @@
             width: 20px;
             height: 20px;
         }
+
         .main-area {
             flex: 1;
             display: flex;
@@ -260,6 +261,7 @@
 
             font-size: 12px;
         }
+
         .user-profile-wrapper {
             position: relative;
         }
@@ -336,6 +338,7 @@
 
             transition: transform 0.2s ease;
         }
+
         .profile-dropdown {
             display: none;
 
@@ -363,6 +366,7 @@
         .profile-dropdown.show {
             display: block;
         }
+
         .logout-form {
             margin: 0;
         }
@@ -404,6 +408,7 @@
         .logout-button svg {
             flex-shrink: 0;
         }
+
         .main-content {
             flex: 1;
 
@@ -437,16 +442,12 @@
 
 
                 <a href="{{ route('mandor.dashboard') }}"
-                   class="sidebar-menu {{ request()->routeIs('mandor.dashboard') ? 'active' : '' }}">
+                    class="sidebar-menu {{ request()->routeIs('mandor.dashboard') ? 'active' : '' }}">
 
-                    <svg fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                         </path>
 
                     </svg>
@@ -461,16 +462,12 @@
 
 
                 <a href="{{ route('mandor.pengajuan.index') }}"
-                   class="sidebar-menu {{ request()->routeIs('mandor.pengajuan*') ? 'active' : '' }}">
+                    class="sidebar-menu {{ request()->routeIs('mandor.pengajuan*') ? 'active' : '' }}">
 
-                    <svg fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a2 2 0 012 2V19a2 2 0 01-2 2z">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a2 2 0 012 2V19a2 2 0 01-2 2z">
                         </path>
 
                     </svg>
@@ -485,16 +482,12 @@
 
 
                 <a href="{{ route('mandor.anggota') }}"
-                   class="sidebar-menu {{ request()->routeIs('mandor.anggota') ? 'active' : '' }}">
+                    class="sidebar-menu {{ request()->routeIs('mandor.anggota') ? 'active' : '' }}">
 
-                    <svg fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                         </path>
 
                     </svg>
@@ -509,16 +502,12 @@
 
 
                 <a href="{{ route('mandor.riwayat') }}"
-                   class="sidebar-menu {{ request()->routeIs('mandor.riwayat') ? 'active' : '' }}">
+                    class="sidebar-menu {{ request()->routeIs('mandor.riwayat') ? 'active' : '' }}">
 
-                    <svg fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
                         </path>
 
                     </svg>
@@ -532,34 +521,29 @@
 
 
 
-<a href="{{ route('profile.edit') }}"
-   class="sidebar-menu {{
-        request()->routeIs('profile.*') ||
-        request()->routeIs('karyawan.profil*') ||
-        request()->routeIs('mandor.profil*') ||
-        request()->is('karyawan/profil*') ||
-        request()->is('mandor/profil*')
-            ? 'active'
-            : ''
+                <a href="{{ route('profile.edit') }}" class="sidebar-menu {{
+    request()->routeIs('profile.*') ||
+    request()->routeIs('karyawan.profil*') ||
+    request()->routeIs('mandor.profil*') ||
+    request()->is('karyawan/profil*') ||
+    request()->is('mandor/profil*')
+    ? 'active'
+    : ''
    }}">
 
-    <svg fill="none"
-         stroke="currentColor"
-         viewBox="0 0 24 24">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                        </path>
 
-    </svg>
+                    </svg>
 
-    <span>
-        Profil Saya
-    </span>
+                    <span>
+                        Profil Saya
+                    </span>
 
-</a>
+                </a>
 
             </nav>
 
@@ -570,19 +554,12 @@
 
                 <div class="notification-wrapper">
 
-                    <button class="notification-btn"
-                            onclick="toggleNotifications()">
+                    <button class="notification-btn" onclick="toggleNotifications()">
 
-                        <svg width="20"
-                             height="20"
-                             fill="none"
-                             stroke="currentColor"
-                             viewBox="0 0 24 24">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
                             </path>
 
                         </svg>
@@ -603,8 +580,7 @@
 
 
 
-                    <div id="notificationDropdown"
-                         class="notification-dropdown">
+                    <div id="notificationDropdown" class="notification-dropdown">
 
                         <div class="notification-header">
 
@@ -627,17 +603,16 @@
 
                             @forelse(Auth::user()->unreadNotifications as $notification)
 
-                                <a href="{{ route('mandor.pengajuan.index') }}"
-                                   class="notification-item">
+                                <a href="{{ route('mandor.pengajuan.index') }}" class="notification-item">
 
                                     <p>
                                         {{ $notification->data['pesan'] ?? 'Ada pengajuan cuti baru masuk.' }}
                                     </p>
 
                                     <span style="
-                                        font-size: 10px;
-                                        color: #9ca3af;
-                                    ">
+                                                font-size: 10px;
+                                                color: #9ca3af;
+                                            ">
                                         {{ $notification->created_at->diffForHumans() }}
                                     </span>
 
@@ -665,26 +640,22 @@
 
 
 
-                    <button type="button"
-                            class="user-profile"
-                            id="profileButton">
-                    @php
-                        $user = Auth::user();
-                        $karyawan = $user->karyawan ?? null;
-                    @endphp
+                    <button type="button" class="user-profile" id="profileButton">
+                        @php
+                            $user = Auth::user();
+                            $karyawan = $user->karyawan ?? null;
+                        @endphp
 
-                    <div class="user-photo">
+                        <div class="user-photo">
 
-                        @if($karyawan && $karyawan->foto)
-                            <img
-                                src="{{ asset('storage/' . $karyawan->foto) }}?v={{ optional($karyawan->updated_at)->timestamp }}"
-                                alt="Foto Profil"
-                            >
-                        @else
-                            {{ strtoupper(substr($user->name ?? 'M', 0, 1)) }}
-                        @endif
+                            @if($karyawan && $karyawan->foto)
+                                <img src="{{ asset('storage/' . $karyawan->foto) }}?v={{ optional($karyawan->updated_at)->timestamp }}"
+                                    alt="Foto Profil">
+                            @else
+                                {{ strtoupper(substr($user->name ?? 'M', 0, 1)) }}
+                            @endif
 
-                    </div>
+                        </div>
 
                         <div class="user-info">
 
@@ -701,18 +672,10 @@
 
 
 
-                        <svg class="profile-arrow"
-                             id="profileArrow"
-                             width="16"
-                             height="16"
-                             fill="none"
-                             stroke="currentColor"
-                             viewBox="0 0 24 24">
+                        <svg class="profile-arrow" id="profileArrow" width="16" height="16" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
 
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M6 9l6 6 6-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9l6 6 6-6">
                             </path>
 
                         </svg>
@@ -720,35 +683,23 @@
                     </button>
 
 
-    
-                    <div class="profile-dropdown"
-                         id="profileDropdown">
 
-                        <form action="{{ route('logout') }}"
-                              method="POST"
-                              class="logout-form">
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <form action="{{ route('logout') }}" method="POST" class="logout-form">
 
                             @csrf
 
-                            <button type="submit"
-                                    class="logout-button">
+                            <button type="submit" class="logout-button">
 
-                                <svg width="17"
-                                     height="17"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     viewBox="0 0 24 24">
+                                <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                                    <path stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          stroke-width="2"
-                                          d="M17 16l4-4m0 0l-4-4m4 4H7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7">
                                     </path>
 
-                                    <path stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          stroke-width="2"
-                                          d="M7 20H5a2 2 0 01-2-2V6a2 2 0 012-2h2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 20H5a2 2 0 01-2-2V6a2 2 0 012-2h2">
                                     </path>
 
                                 </svg>
@@ -768,7 +719,7 @@
             </header>
 
 
-          
+
 
             <div class="main-content">
 
@@ -782,7 +733,7 @@
 
     <script>
 
-        
+
 
         function toggleNotifications() {
 
@@ -809,12 +760,12 @@
 
         if (profileButton && profileDropdown) {
 
-            profileButton.addEventListener('click', function(event) {
+            profileButton.addEventListener('click', function (event) {
 
                 event.stopPropagation();
 
 
-            
+
 
                 const notificationDropdown =
                     document.getElementById('notificationDropdown');
@@ -828,7 +779,7 @@
                 profileDropdown.classList.toggle('show');
 
 
-             
+
 
                 if (profileDropdown.classList.contains('show')) {
 
@@ -847,12 +798,12 @@
         }
 
 
-        
-
-        window.addEventListener('click', function(event) {
 
 
-           
+        window.addEventListener('click', function (event) {
+
+
+
 
             const notificationWrapper =
                 document.querySelector('.notification-wrapper');
@@ -869,9 +820,6 @@
                 notificationDropdown.style.display = 'none';
 
             }
-
-
-           
 
             const profileWrapper =
                 document.querySelector('.user-profile-wrapper');

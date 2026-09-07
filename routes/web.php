@@ -11,6 +11,7 @@ use App\Http\Controllers\mandor\RiwayatController;
 use App\Http\Controllers\Supervisor\PengajuanController as SupervisorPengajuanController;
 use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardController;
 use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatController; // <-- TAMBAHKAN BARIS INI
+use App\Http\Controllers\StaffAdmin\DashboardController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -71,4 +72,9 @@ Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(fu
     Route::get('/riwayat-keputusan', [SupervisorRiwayatController::class, 'index'])->name('riwayat');
 });
 
+
+// role staff administrasi
+Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('staffadmin.dashboard');
+});
 require __DIR__ . '/auth.php';
