@@ -21,7 +21,7 @@
                 <span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded-full">+12% dari bln lalu</span>
             </div>
             <p class="text-sm text-gray-500 font-medium">Total Pengajuan Selesai</p>
-            <h3 class="text-3xl font-bold text-gray-800 mt-1">{{ $total_selesai }}</h3>
+            <h3 class="text-3xl font-bold text-gray-800 mt-1">{{ $total_selesai ?? 0 }}</h3>
         </div>
 
         <!-- Card 2: Karyawan Cuti -->
@@ -33,7 +33,7 @@
                 <span class="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded-full">Bulan ini</span>
             </div>
             <p class="text-sm text-gray-500 font-medium">Total Karyawan Cuti</p>
-            <h3 class="text-3xl font-bold text-gray-800 mt-1">{{ $karyawan_cuti }}</h3>
+            <h3 class="text-3xl font-bold text-gray-800 mt-1">{{ $karyawan_cuti ?? 0 }}</h3>
         </div>
 
         <!-- Card 3: Rata-rata Durasi -->
@@ -44,37 +44,93 @@
                 </div>
             </div>
             <p class="text-sm text-gray-500 font-medium">Rata-rata Durasi Cuti</p>
-            <h3 class="text-3xl font-bold text-gray-800 mt-1">{{ $rata_durasi }} <span class="text-base font-normal text-gray-500">Hari</span></h3>
+            <h3 class="text-3xl font-bold text-gray-800 mt-1">{{ $rata_durasi ?? 0 }} <span class="text-base font-normal text-gray-500">Hari</span></h3>
         </div>
 
     </div>
 
-    <!-- Area Chart (Statik Mockup CSS) -->
+    <!-- Section Grafik Tren Cuti 6 Bulan Terakhir -->
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-lg font-bold text-gray-800">Tren Cuti 6 Bulan Terakhir</h2>
-            <a href="#" class="text-sm font-semibold text-blue-700 hover:underline">Lihat Detail &gt;</a>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-bold text-gray-900">Tren Cuti 6 Bulan Terakhir</h2>
+            <a href="{{ route('staffadmin.riwayat') }}" class="text-sm font-medium text-blue-600 hover:underline">Lihat Detail &gt;</a>
         </div>
-        
-        <!-- CSS Grid untuk Diagram Batang -->
-        <div class="h-64 flex items-end justify-between gap-6 relative px-2">
-            <div class="absolute inset-0 flex flex-col justify-between border-b border-gray-200">
-                <div class="border-t border-dashed border-gray-200 w-full"></div>
-                <div class="border-t border-dashed border-gray-200 w-full"></div>
-                <div class="border-t border-dashed border-gray-200 w-full"></div>
-            </div>
-            
-            <!-- Bar Bulan -->
-            <div class="w-full bg-[#0a5c9e] h-[50%] rounded-t-sm z-10 relative"><span class="absolute -bottom-6 w-full text-center text-xs text-gray-500">Okt</span></div>
-            <div class="w-full bg-[#3983be] h-[35%] rounded-t-sm z-10 relative"><span class="absolute -bottom-6 w-full text-center text-xs text-gray-500">Nov</span></div>
-            <div class="w-full bg-[#0a5c9e] h-[85%] rounded-t-sm z-10 relative"><span class="absolute -bottom-6 w-full text-center text-xs text-gray-500">Des</span></div>
-            <div class="w-full bg-[#3983be] h-[45%] rounded-t-sm z-10 relative"><span class="absolute -bottom-6 w-full text-center text-xs text-gray-500">Jan</span></div>
-            <div class="w-full bg-[#75a6c8] h-[30%] rounded-t-sm z-10 relative"><span class="absolute -bottom-6 w-full text-center text-xs text-gray-500">Feb</span></div>
-            <div class="w-full bg-[#053d6e] h-[65%] rounded-t-sm z-10 relative">
-                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded">64 Cuti</div>
-                <span class="absolute -bottom-6 w-full text-center text-xs font-bold text-gray-900">Mar</span>
-            </div>
+        <div class="relative w-full h-80">
+            <canvas id="trenCutiChart"></canvas>
         </div>
     </div>
+
 </div>
+
+<!-- Script Chart.js Dinamis dari Database -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('trenCutiChart').getContext('2d');
+        
+        // Menerima data dari Controller Laravel
+        const labels = {!! json_encode($chartLabels ?? ['Okt', 'Nov', 'Des', 'Jan', 'Feb', 'Mar']) !!};
+        const dataValues = {!! json_encode($chartData ?? [0, 0, 0, 0, 0, 0]) !!};
+        
+        const trenCutiChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Cuti',
+                    data: dataValues,
+                    backgroundColor: function(context) {
+                        // Membuat bar bulan terakhir (index paling akhir) warnanya lebih gelap menyesuaikan desain
+                        const index = context.dataIndex;
+                        const isLast = index === context.dataset.data.length - 1;
+                        return isLast ? '#0a5c9e' : '#60a5fa';
+                    },
+                    borderRadius: 4,
+                    barThickness: 'flex',
+                    maxBarThickness: 50
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + ' Cuti';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            borderDash: [4, 4],
+                            color: '#e5e7eb'
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Figtree'
+                            },
+                            precision: 0 // Agar angka di sumbu Y selalu bilangan bulat
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Figtree'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
 @endsection

@@ -19,6 +19,8 @@ Route::get('/', function () {
         if ($role === 'karyawan') return redirect()->route('karyawan.dashboard');
         if ($role === 'mandor') return redirect()->route('mandor.dashboard');
         if ($role === 'supervisor') return redirect()->route('supervisor.dashboard');
+        if ($role === 'staff_administrasi') return redirect()->route('staffadmin.dashboard');
+        
     }
     return redirect()->route('login');
 });
@@ -74,7 +76,10 @@ Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(fu
 
 
 // role staff administrasi
-Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('staffadmin.dashboard');
+Route::prefix('staff-admin')->middleware(['auth'])->name('staffadmin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/rekap', [DashboardController::class, 'rekap'])->name('rekap');
+    Route::get('/laporan', [DashboardController::class, 'laporan'])->name('laporan');
+    Route::get('/riwayat', [DashboardController::class, 'riwayat'])->name('riwayat');
 });
 require __DIR__ . '/auth.php';
