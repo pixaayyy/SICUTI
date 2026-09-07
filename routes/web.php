@@ -12,7 +12,8 @@ use App\Http\Controllers\Supervisor\PengajuanController as SupervisorPengajuanCo
 use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardController;
 use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatController; // <-- TAMBAHKAN BARIS INI
 use App\Http\Controllers\StaffAdmin\DashboardController;
-use App\Http\Controllers\staffadmin\RekapCutiController;
+use App\Http\Controllers\StaffAdmin\RekapCutiController; // Pastikan controller ini di-use
+
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -20,9 +21,9 @@ Route::get('/', function () {
         if ($role === 'karyawan') return redirect()->route('karyawan.dashboard');
         if ($role === 'mandor') return redirect()->route('mandor.dashboard');
         if ($role === 'supervisor') return redirect()->route('supervisor.dashboard');
-        if ($role === 'staff_admin') return redirect()->route('staff_admin.dashboard');
-
-        }
+        if ($role === 'staff_administrasi') return redirect()->route('staffadmin.dashboard');
+        
+    }
     return redirect()->route('login');
 });
 
@@ -70,8 +71,8 @@ Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(fu
     Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
     Route::post('/pengajuan/{id}/approve', [SupervisorPengajuanController::class, 'approve'])->name('pengajuan.approve');
     Route::post('/pengajuan/{id}/reject', [SupervisorPengajuanController::class, 'reject'])->name('pengajuan.reject');
-    Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
-    Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
+    // Route::get('/pengajuan', [SupervisorPengajuanController::class, 'index'])->name('pengajuan.index');
+    // Route::get('/pengajuan/{id}', [SupervisorPengajuanController::class, 'show'])->name('pengajuan.show');
     Route::get('/riwayat-keputusan', [SupervisorRiwayatController::class, 'index'])->name('riwayat');
 });
 
@@ -79,7 +80,9 @@ Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(fu
 // role staff administrasi
 Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('staffadmin.dashboard');
-    Route::get('/rekapcuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');
+    Route::get('/rekapcuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');    
+    Route::get('/laporan', [DashboardController::class, 'laporan'])->name('laporan');
+    Route::get('/riwayat', [DashboardController::class, 'riwayat'])->name('riwayat');
 });
 
 

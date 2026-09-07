@@ -22,7 +22,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
@@ -32,9 +32,11 @@ public function store(LoginRequest $request): RedirectResponse
         if ($role === 'mandor') {
             return redirect()->route('mandor.dashboard');
         } elseif ($role === 'supervisor') {
-            return redirect()->route('supervisor.dashboard'); // Jika route ini belum ada, bisa ditambahkan nanti
+            return redirect()->route('supervisor.dashboard');
         } elseif ($role === 'hr') {
-            return redirect()->route('hr.dashboard'); // Jika route ini belum ada, bisa ditambahkan nanti
+            return redirect()->route('hr.dashboard');
+        } elseif ($role === 'staff_administrasi') {
+            return redirect()->route('staffadmin.dashboard');
         }
 
         return redirect()->route('karyawan.dashboard');
