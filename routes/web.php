@@ -79,7 +79,8 @@ Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(fu
 // role staff administrasi
 Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('staffadmin.dashboard');
-    Route::get('/rekapcuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');    
+    Route::get('/staff-admin/rekap-cuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');
+    Route::get('/staff-admin/rekap-cuti/export', [RekapCutiController::class, 'export'])->name('staffadmin.rekapcuti.export');
     Route::get('/laporan', [DashboardController::class, 'laporan'])->name('laporan');
     Route::get('/riwayat', [DashboardController::class, 'riwayat'])->name('riwayat');
 });
