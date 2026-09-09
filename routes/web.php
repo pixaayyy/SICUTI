@@ -13,6 +13,7 @@ use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardCo
 use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatController; // <-- TAMBAHKAN BARIS INI
 use App\Http\Controllers\StaffAdmin\DashboardController;
 use App\Http\Controllers\StaffAdmin\RekapCutiController;
+use App\Http\Controllers\StaffAdmin\RiwayatController as StaffAdminRiwayatController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -79,10 +80,8 @@ Route::middleware(['auth'])->prefix('supervisor')->name('supervisor.')->group(fu
 // role staff administrasi
 Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('staffadmin.dashboard');
-    Route::get('/rekapcuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');    
-    Route::get('/laporan', [DashboardController::class, 'laporan'])->name('laporan');
-    Route::get('/riwayat', [DashboardController::class, 'riwayat'])->name('riwayat');
+    Route::get('/rekapcuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');        
+    Route::get('/riwayat', [StaffAdminRiwayatController::class, 'index'])->name('staffadmin.riwayat');
 });
-
 
 require __DIR__ . '/auth.php';
