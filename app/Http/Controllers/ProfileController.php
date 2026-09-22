@@ -48,21 +48,17 @@ class ProfileController extends Controller
         $user->save();
 
         // Simpan perubahan ke tabel karyawan
-        $karyawan = $user->karyawan;
-        if ($karyawan) {
-            $karyawan->nik = $request->nik;
-            $karyawan->no_telepon = $request->no_telepon;
+        $karyawan = $user->karyawan()->firstOrNew(); 
+        $karyawan->nik = $request->nik;
+        $karyawan->no_telepon = $request->no_telepon;
 
-            if ($request->hasFile('foto')) {
-                $path = $request->file('foto')->store('profil_karyawan', 'public');
-                $karyawan->foto = $path;
-            }
-
-            $karyawan->save();
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('profil_karyawan', 'public');
+            $karyawan->foto = $path;
         }
 
-        // Redirect kembali ke rute profil karyawan agar menu sidebar tetap aktif
-        return Redirect::route('karyawan.profil')->with('status', 'profile-updated');
+        $karyawan->save();
+        return redirect()->back()->with('status', 'profile-updated');
     }
 
     /**

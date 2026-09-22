@@ -1,7 +1,8 @@
 @extends(
-    Auth::user()->role === 'mandor' ? 'layouts.mandor' : 
+    Auth::user()->role === 'hr' ? 'layouts.hr' : 
+    (Auth::user()->role === 'mandor' ? 'layouts.mandor' : 
     (Auth::user()->role === 'karyawan' ? 'layouts.karyawan' : 
-    (Auth::user()->role === 'supervisor' ? 'layouts.supervisor' : 'layouts.app'))
+    (Auth::user()->role === 'supervisor' ? 'layouts.supervisor' : 'layouts.app')))
 )
 @section('title', 'Profil Saya')
 @section('content')
@@ -255,8 +256,8 @@
                     
                     <div class="detail-item">
                         <label for="nik">NIK</label>
-                        <p id="text-nik">{{ $karyawan->nik ?? '-' }}</p>
-                        <input type="text" id="input-nik" name="nik" value="{{ old('nik', $karyawan->nik) }}" class="form-input d-none" placeholder="Masukkan NIK">
+                        <p id="text-nik">{{ $karyawan?->nik ?? '-' }}</p>
+                        <input type="text" id="input-nik" name="nik" value="{{ old('nik', $karyawan?->nik) }}" class="form-input d-none" placeholder="Masukkan NIK">
                         <x-input-error :messages="$errors->get('nik')" class="text-error" />
                     </div>
 
@@ -279,11 +280,11 @@
 
                     <div class="detail-item">
                         <label for="no_telepon">No. Telepon</label>
-                        <p id="text-telepon">{{ $karyawan->no_telepon ?? '-' }}</p>
-                        <input type="text" id="input-telepon" name="no_telepon" value="{{ old('no_telepon', $karyawan->no_telepon) }}" class="form-input d-none" placeholder="Masukkan No Telepon">
+                        <p id="text-telepon">{{ $karyawan?->no_telepon ?? '-' }}</p>
+                        <input type="text" id="input-telepon" name="no_telepon" value="{{ old('no_telepon', $karyawan?->no_telepon) }}" class="form-input d-none" placeholder="Masukkan No Telepon">
                         <x-input-error :messages="$errors->get('no_telepon')" class="text-error" />
                     </div>
-
+                    
                     <div class="detail-item">
                         <label>Tanggal Bergabung</label>
                         <p>{{ $karyawan && $karyawan->tanggal_bergabung ? \Carbon\Carbon::parse($karyawan->tanggal_bergabung)->translatedFormat('d F Y') : '-' }}</p>

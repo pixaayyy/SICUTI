@@ -14,6 +14,9 @@ use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatContro
 use App\Http\Controllers\StaffAdmin\DashboardController;
 use App\Http\Controllers\StaffAdmin\RekapCutiController;
 use App\Http\Controllers\StaffAdmin\RiwayatController as StaffAdminRiwayatController;
+use App\Http\Controllers\HR\DashboardController as HRDashboardController;
+use App\Http\Controllers\HR\PengajuanController as HRPengajuanController;
+use App\Http\Controllers\HR\RiwayatController as HRRiwayatController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -86,6 +89,18 @@ Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
     Route::get('/riwayat', [DashboardController::class, 'riwayat'])->name('riwayat');
     Route::get('/rekapcuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');        
     Route::get('/riwayat', [StaffAdminRiwayatController::class, 'index'])->name('staffadmin.riwayat');
+});
+
+// role hr
+Route::prefix('hr')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [HRDashboardController::class, 'index'])->name('hr.dashboard');
+    Route::get('/persetujuan', [HRPengajuanController::class, 'index'])->name('hr.persetujuan');
+    Route::get('/pengajuan/{id}', [HRPengajuanController::class, 'show'])->name('hr.pengajuan.show');
+    Route::post('/pengajuan/{id}/proses', [HRPengajuanController::class, 'proses'])->name('hr.pengajuan.proses');
+    Route::get('/pengajuan/{id}/download', [HRPengajuanController::class, 'download'])->name('hr.pengajuan.download');
+    Route::get('/riwayat', [HRRiwayatController::class, 'index'])->name('hr.riwayat');    
+    Route::get('/profil', [ProfileController::class, 'edit'])->name('hr.profil');
+    Route::patch('/profil', [ProfileController::class, 'update'])->name('hr.profil.update'); // Tambahkan juga route patch jika form edit profil HR melakukan submit ke route ini
 });
 
 require __DIR__ . '/auth.php';
