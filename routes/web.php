@@ -13,6 +13,7 @@ use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardCo
 use App\Http\Controllers\Supervisor\RiwayatController as SupervisorRiwayatController; // <-- TAMBAHKAN BARIS INI
 use App\Http\Controllers\StaffAdmin\DashboardController;
 use App\Http\Controllers\StaffAdmin\RekapCutiController;
+use App\Http\Controllers\StaffAdmin\PegawaiController;
 use App\Http\Controllers\StaffAdmin\RiwayatController as StaffAdminRiwayatController;
 use App\Http\Controllers\HR\DashboardController as HRDashboardController;
 use App\Http\Controllers\HR\PengajuanController as HRPengajuanController;
@@ -89,6 +90,8 @@ Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
     Route::get('/riwayat', [DashboardController::class, 'riwayat'])->name('riwayat');
     Route::get('/rekapcuti', [RekapCutiController::class, 'index'])->name('staffadmin.rekapcuti');        
     Route::get('/riwayat', [StaffAdminRiwayatController::class, 'index'])->name('staffadmin.riwayat');
+    Route::get('/pegawai/tambah', [PegawaiController::class, 'create'])->name('staffadmin.pegawai.create');
+    Route::post('/pegawai/tambah', [PegawaiController::class, 'store'])->name('staffadmin.pegawai.store');
 });
 
 // role hr

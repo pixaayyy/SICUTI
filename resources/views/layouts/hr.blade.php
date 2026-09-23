@@ -104,30 +104,112 @@
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 24px; /* Jarak notif dan profil */
+            gap: 24px;
+        }
+
+        /* AWAL STYLING NOTIFIKASI */
+        .notification-wrapper {
+            position: relative;
         }
 
         .notification-btn {
-            background: none;
+            background: #f3f4f6;
             border: none;
-            color: #6b7280;
+            color: #4b5563;
             cursor: pointer;
-            position: relative;
-            padding: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .notification-btn:hover {
+            background-color: #e5e7eb;
+            color: #1f2937;
         }
 
         .notification-dot {
             position: absolute;
-            top: -2px;
-            right: -2px;
+            top: 2px;
+            right: 4px;
             width: 10px;
             height: 10px;
             background-color: #ef4444;
             border-radius: 50%;
             border: 2px solid #ffffff;
         }
+
+        .notif-menu {
+            width: 320px;
+            right: -20px;
+            padding: 0;
+        }
+
+        .notif-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            font-size: 14px;
+            color: #111827;
+        }
+
+        .notif-body {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notif-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .notif-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .notif-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .notif-item-desc {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .notif-item-time {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        .notif-footer {
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .notif-footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .notif-footer a:hover {
+            text-decoration: underline;
+        }
+        /* AKHIR STYLING NOTIFIKASI */
 
         /* Wrapper Profil & Dropdown */
         .user-dropdown-wrapper {
@@ -138,7 +220,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            cursor: pointer; /* Memberikan indikasi bisa diklik */
+            cursor: pointer;
             padding: 4px 8px;
             border-radius: 8px;
             transition: background-color 0.2s;
@@ -172,24 +254,28 @@
             color: #6b7280;
         }
 
-        /* Dropdown Menu Styling */
+        /* Dropdown Menu Global Styling */
         .dropdown-menu {
             position: absolute;
             top: 110%;
-            right: 0;
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 180px;
-            display: none; /* Sembunyikan default */
+            display: none;
             flex-direction: column;
             z-index: 50;
             overflow: hidden;
         }
 
         .dropdown-menu.show {
-            display: flex; /* Munculkan saat class 'show' aktif */
+            display: flex;
+        }
+
+        /* Profile Dropdown Specific */
+        .profile-menu {
+            right: 0;
+            width: 180px;
         }
 
         .dropdown-item {
@@ -213,7 +299,7 @@
             text-align: left;
             border: none;
             background: none;
-            color: #dc2626; /* Merah untuk logout */
+            color: #dc2626;
             font-weight: 500;
         }
 
@@ -263,24 +349,52 @@
         <div class="topbar">
             <div class="user-profile">
                 
-                <!-- Tombol Notifikasi -->
-                <button class="notification-btn">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    
-                    <!-- Logic Notifikasi Aktif -->
-                    @php
-                        // Ganti 'PengajuanCuti' dengan nama Model yang sesuai di sistem Anda (misal: Cuti)
-                        // dan sesuaikan string statusnya jika menggunakan huruf kapital ('Pending' atau 'Menunggu')
-                        $adaNotif = \App\Models\PengajuanCuti::where('status', 'pending')->exists();
-                    @endphp
-                    @if($adaNotif)
-                        <span class="notification-dot"></span>
-                    @endif
-                </button>
+                <!-- BAGIAN NOTIFIKASI YANG BISA DIKLIK -->
+                <div class="notification-wrapper">
+                    <button class="notification-btn" onclick="toggleNotifDropdown()">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        
+                        @php
+                            // Mengambil maksimal 5 cuti terbaru yang statusnya butuh persetujuan
+                            $notifCuti = \App\Models\PengajuanCuti::whereIn('status', ['menunggu', 'menunggu_supervisor', 'menunggu_hr'])
+                                            ->orderBy('created_at', 'desc')
+                                            ->take(5)
+                                            ->get();
+                            $adaNotif = $notifCuti->count() > 0;
+                        @endphp
+
+                        @if($adaNotif)
+                            <span class="notification-dot"></span>
+                        @endif
+                    </button>
+
+                    <!-- Dropdown Menu Notifikasi -->
+                    <div id="notifMenu" class="dropdown-menu notif-menu">
+                        <div class="notif-header">Notifikasi Pengajuan Cuti</div>
+                        <div class="notif-body">
+                            @forelse($notifCuti as $cuti)
+                                <a href="{{ route('hr.persetujuan') }}" class="notif-item">
+                                    <span class="notif-item-title">{{ $cuti->karyawan->user->name ?? 'Karyawan' }}</span>
+                                    <span class="notif-item-desc">Mengajukan cuti selama {{ $cuti->durasi }} hari. Menunggu persetujuan Anda.</span>
+                                    <span class="notif-item-time">{{ $cuti->created_at->diffForHumans() }}</span>
+                                </a>
+                            @empty
+                                <div style="padding: 20px; text-align: center; font-size: 12px; color: #6b7280;">
+                                    Belum ada notifikasi baru.
+                                </div>
+                            @endforelse
+                        </div>
+                        @if($adaNotif)
+                        <div class="notif-footer">
+                            <a href="{{ route('hr.persetujuan') }}">Lihat Halaman Persetujuan</a>
+                        </div>
+                        @endif
+                    </div>
+                </div>
 
                 <!-- Wrapper Profil dengan Dropdown -->
                 <div class="user-dropdown-wrapper">
-                    <!-- Area yang diklik untuk memunculkan dropdown -->
+                    <!-- Area yang diklik untuk memunculkan dropdown profil -->
                     <div class="user-info" onclick="toggleProfileDropdown()">
                         @php
                             $user = Auth::user();
@@ -301,7 +415,7 @@
                     </div>
 
                     <!-- Menu Dropdown Logout -->
-                    <div id="profileMenu" class="dropdown-menu">
+                    <div id="profileMenu" class="dropdown-menu profile-menu">
                         <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                             @csrf
                             <button type="submit" class="dropdown-item logout-btn">
@@ -321,21 +435,28 @@
         </div>
     </div>
 
-    <!-- Script untuk Toggle Dropdown Logout -->
+    <!-- Script untuk Toggle Dropdown -->
     <script>
-        function toggleProfileDropdown() {
-            document.getElementById('profileMenu').classList.toggle('show');
+        // Buka tutup notifikasi
+        function toggleNotifDropdown() {
+            document.getElementById('notifMenu').classList.toggle('show');
+            // Jika notifikasi dibuka, pastikan dropdown profil tertutup
+            document.getElementById('profileMenu').classList.remove('show');
         }
 
-        // Tutup dropdown jika user klik di luar area profil
+        // Buka tutup profil logout
+        function toggleProfileDropdown() {
+            document.getElementById('profileMenu').classList.toggle('show');
+            // Jika profil dibuka, pastikan dropdown notifikasi tertutup
+            document.getElementById('notifMenu').classList.remove('show');
+        }
+
+        // Tutup semua dropdown jika user klik di luar area menu
         window.onclick = function(event) {
-            if (!event.target.closest('.user-dropdown-wrapper')) {
+            if (!event.target.closest('.user-dropdown-wrapper') && !event.target.closest('.notification-wrapper')) {
                 var dropdowns = document.getElementsByClassName("dropdown-menu");
                 for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
+                    dropdowns[i].classList.remove('show');
                 }
             }
         }

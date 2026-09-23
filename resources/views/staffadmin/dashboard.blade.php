@@ -53,8 +53,8 @@
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-lg font-bold text-gray-900">Tren Cuti 6 Bulan Terakhir</h2>
-        <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Lihat Detail &gt;</a>        
-    </div>
+            <!-- Bagian href Lihat Detail dihapus dari sini -->
+        </div>
         <div class="relative w-full h-80">
             <canvas id="trenCutiChart"></canvas>
         </div>
@@ -67,7 +67,6 @@
     document.addEventListener("DOMContentLoaded", function() {
         const ctx = document.getElementById('trenCutiChart').getContext('2d');
         
-        // Menerima data dari Controller Laravel
         const labels = {!! json_encode($chartLabels ?? ['Okt', 'Nov', 'Des', 'Jan', 'Feb', 'Mar']) !!};
         const dataValues = {!! json_encode($chartData ?? [0, 0, 0, 0, 0, 0]) !!};
         
@@ -79,7 +78,6 @@
                     label: 'Jumlah Cuti',
                     data: dataValues,
                     backgroundColor: function(context) {
-                        // Membuat bar bulan terakhir (index paling akhir) warnanya lebih gelap menyesuaikan desain
                         const index = context.dataIndex;
                         const isLast = index === context.dataset.data.length - 1;
                         return isLast ? '#0a5c9e' : '#60a5fa';
@@ -115,7 +113,7 @@
                             font: {
                                 family: 'Figtree'
                             },
-                            precision: 0 // Agar angka di sumbu Y selalu bilangan bulat
+                            precision: 0 
                         }
                     },
                     x: {
