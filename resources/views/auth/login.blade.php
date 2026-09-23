@@ -367,9 +367,9 @@
                     </form>
                 </div>
 
-                <div class="right-footer">
+                <!-- <div class="right-footer">
                     Butuh bantuan akses? <a href="#">Hubungi HR Admin</a>
-                </div>
+                </div> -->
 
             </div>
         </div>

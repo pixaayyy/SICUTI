@@ -178,10 +178,8 @@
 
     <div class="reset-wrapper">
 
-        <!-- Header -->
         <div class="reset-header">
             <div class="logo-box">
-                <!-- Logo yang sama seperti halaman Lupa Password -->
                 <svg
                     style="width: 28px; height: 28px;"
                     fill="none"
@@ -202,7 +200,6 @@
             <p>Reset Kata Sandi</p>
         </div>
 
-        <!-- Card -->
         <div class="reset-card">
 
             <p class="instruction">
