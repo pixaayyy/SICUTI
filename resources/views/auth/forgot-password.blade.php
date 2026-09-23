@@ -22,7 +22,10 @@
 
         body {
             color: #111827;
-            background-color: #f8fafc;
+            /* Background menggunakan foto perusahaan.jpeg dengan overlay gelap transparan */
+            background: linear-gradient(rgba(11, 60, 124, 0.75), rgba(8, 42, 92, 0.85)), 
+                        url('{{ asset("images/foto perusahaan.jpeg") }}') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -32,12 +35,23 @@
 
         .forgot-wrapper {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+        }
+
+        /* Kartu utama yang membungkus header, logo, dan form sekaligus */
+        .forgot-card-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 36px 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            /* Dibungkus border warna putih */
+            border: 2px solid #ffffff;
         }
 
         .forgot-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .logo-box {
@@ -66,15 +80,7 @@
             margin-top: 4px;
         }
 
-        .forgot-card {
-            background: white;
-            padding: 32px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            border: 1px solid #f3f4f6;
-        }
-
-        .forgot-card p.instruction {
+        p.instruction {
             font-size: 14px;
             color: #4b5563;
             text-align: center;
@@ -83,7 +89,7 @@
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
@@ -141,6 +147,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.2s;
+            margin-top: 8px;
         }
 
         .btn-submit:hover {
@@ -148,7 +155,7 @@
         }
 
         .back-link-container {
-            margin-top: 32px;
+            margin-top: 24px;
             text-align: center;
         }
 
@@ -157,13 +164,14 @@
             align-items: center;
             font-size: 14px;
             font-weight: 600;
-            color: #0b3c7c;
+            color: #ffffff;
             text-decoration: none;
             transition: color 0.2s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .back-link:hover {
-            color: #1e40af;
+            color: #93c5fd;
         }
     </style>
 </head>
@@ -171,16 +179,19 @@
     
     <div class="forgot-wrapper">
         
-        <div class="forgot-header">
-            <div class="logo-box">
-                <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-            </div>
-            <h1>SICUTI</h1>
-            <p>Lupa Kata Sandi</p>
-        </div>
-
-        <div class="forgot-card">
+        <!-- Bungkus utama card (header + form di dalam 1 border putih) -->
+        <div class="forgot-card-wrapper">
             
+            <div class="forgot-header">
+                <div class="logo-box">
+                    <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <h1>SICUTI</h1>
+                <p>Lupa Kata Sandi</p>
+            </div>
+
             <p class="instruction">
                 Masukkan email Anda untuk menerima instruksi pemulihan kata sandi
             </p>
@@ -194,25 +205,31 @@
                     <label for="email">Alamat Email</label>
                     <div class="input-wrapper">
                         <div class="input-icon">
-                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
                         </div>
                         <input id="email" class="form-input" type="email" name="email" value="{{ old('email') }}" required autofocus placeholder="Masukkan email anda">
                     </div>
-                    <x-input-error :messages="$errors->get('email')" style="margin-top: 8px;" />
+                    <x-input-error :messages="$errors->get('email')" style="margin-top: 8px; color: #dc2626; font-size: 12px;" />
                 </div>
 
                 <button type="submit" class="btn-submit">
                     Kirim
                 </button>
             </form>
+
         </div>
 
         <div class="back-link-container">
             <a href="{{ route('login') }}" class="back-link">
-                <svg style="width: 16px; height: 16px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <svg style="width: 16px; height: 16px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
                 Kembali ke Login
             </a>
         </div>
+
     </div>
 
 </body>
