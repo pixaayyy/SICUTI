@@ -17,6 +17,7 @@ class Karyawan extends Model
         'jabatan',
         'departemen',
         'no_telepon',
+        'tanggal_bergabung',
         'foto',
     ];
 

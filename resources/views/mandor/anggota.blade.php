@@ -523,9 +523,7 @@
                 $anggota->jabatan
                 ?? '-';
 
-            $sisaCuti =
-                optional($anggota->sisaCuti->first())->sisa
-                ?? 12;
+            $sisaCuti =$anggota->sisaCuti?->sisa?? 12;
 
             $tanggalBergabung =
                 $anggota->created_at

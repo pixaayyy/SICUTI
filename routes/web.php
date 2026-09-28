@@ -92,6 +92,7 @@ Route::prefix('staff-admin')->middleware(['auth'])->group(function () {
     Route::get('/riwayat', [StaffAdminRiwayatController::class, 'index'])->name('staffadmin.riwayat');
     Route::get('/pegawai/tambah', [PegawaiController::class, 'create'])->name('staffadmin.pegawai.create');
     Route::post('/pegawai/tambah', [PegawaiController::class, 'store'])->name('staffadmin.pegawai.store');
+    Route::delete('/staffadmin/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('staffadmin.pegawai.destroy');
 });
 
 // role hr

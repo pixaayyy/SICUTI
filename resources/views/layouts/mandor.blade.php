@@ -31,72 +31,80 @@
             overflow: hidden;
         }
 
-
-
+        /* --- PERUBAHAN CSS SIDEBAR DIMULAI DARI SINI --- */
         .sidebar {
-            width: 260px;
+            width: 250px; /* Disesuaikan dengan lebar sidebar HR */
             height: 100vh;
-            background-color: #0d3b82;
+            background-color: #0b3b84; /* Warna biru HR */
             color: #ffffff;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            z-index: 10;
         }
 
         .sidebar-brand {
-            padding: 28px 24px 30px;
+            padding: 24px 20px; /* Disesuaikan dengan HR */
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.2); /* Menambahkan border dashed seperti HR */
         }
 
         .sidebar-brand h1 {
-            font-size: 26px;
+            font-size: 20px; /* Disesuaikan dengan HR */
             font-weight: 700;
-            margin-bottom: 4px;
+            margin: 0 0 4px 0; /* Reset margin dan berikan jarak bawah */
+            letter-spacing: normal;
         }
 
         .sidebar-brand p {
-            color: #bfdbfe;
+            color: #d1d5db;
             font-size: 11px;
+            margin: 0;
         }
 
         .sidebar-nav {
             flex: 1;
-            padding: 0 16px;
+            padding: 20px 0; /* Menghilangkan padding kiri kanan agar background active menempel di kiri */
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Jarak antar menu */
         }
 
         .sidebar-menu {
             display: flex;
             align-items: center;
-            gap: 12px;
-
-            padding: 12px 16px;
-            margin-bottom: 8px;
-
-            color: #dbeafe;
+            padding: 12px 24px;
+            color: #d1d5db;
             text-decoration: none;
-
-            border-radius: 8px;
-
             font-size: 14px;
             font-weight: 500;
-
             transition: all 0.2s;
+            border-left: 4px solid transparent; /* Untuk ruang garis aktif nanti */
+            margin-bottom: 0; /* Menghapus margin-bottom lama karena sekarang pakai gap di nav */
         }
 
         .sidebar-menu:hover {
             background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
         }
 
+        /* Gaya Menu Aktif seperti HR */
         .sidebar-menu.active {
             background-color: #ffffff;
-            color: #0d3b82;
+            color: #0b3b84;
             font-weight: 600;
+            border-left: 4px solid #0b3b84; /* Garis biru di kiri */
+            border-radius: 0 24px 24px 0; /* Melengkung di kanan saja */
+            margin-right: 16px; /* Jarak dari tepi kanan sidebar */
         }
 
         .sidebar-menu svg {
+            margin-right: 12px; /* Disesuaikan agar icon tidak terlalu menempel ke teks */
             width: 20px;
             height: 20px;
+            flex-shrink: 0;
         }
+        /* --- PERUBAHAN CSS SIDEBAR SELESAI --- */
 
         .main-area {
             flex: 1;

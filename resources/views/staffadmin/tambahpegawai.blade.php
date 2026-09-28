@@ -7,8 +7,8 @@
     
     <!-- Header Title -->
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-900">Tambah Pegawai Baru</h1>
-        <p class="text-sm text-gray-500 mt-1">Masukkan data pegawai atau pengguna baru ke dalam sistem.</p>
+        <h1 class="text-2xl font-bold text-gray-900">Kelola Pegawai</h1>
+        <p class="text-sm text-gray-500 mt-1">Tambahkan data pegawai baru dan kelola daftar pegawai yang sudah ada.</p>
     </div>
 
     <!-- Alert Success -->
@@ -34,48 +34,51 @@
         </div>
     @endif
 
-    <!-- Form Container -->
-    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 max-w-2xl">
+    <!-- FORM TAMBAH PEGAWAI -->
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 mb-10 max-w-3xl">
+        <h2 class="text-lg font-bold text-gray-800 mb-6 border-b pb-2">Form Tambah Pegawai Baru</h2>
         <form action="{{ route('staffadmin.pegawai.store') }}" method="POST">
             @csrf
             
-            <div class="mb-5">
-                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                <input type="text" name="name" id="name" value="{{ old('name') }}" required 
-                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                       placeholder="Masukkan nama lengkap">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                <div>
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}" required 
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                           placeholder="Masukkan nama lengkap">
+                </div>
+                <div>
+                    <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                    <input type="text" name="username" id="username" value="{{ old('username') }}" required 
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                           placeholder="Masukkan username unik">
+                </div>
             </div>
 
-            <div class="mb-5">
-                <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                <input type="text" name="username" id="username" value="{{ old('username') }}" required 
-                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                       placeholder="Masukkan username unik">
-            </div>
-
-            <div class="mb-5">
-                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" required 
-                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                       placeholder="email@perusahaan.com">
-            </div>
-
-            <div class="mb-5">
-                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                <div class="relative">
-                    <input type="password" name="password" id="password" required minlength="8" 
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pr-10"
-                           placeholder="Minimal 8 karakter">
-                    
-                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none">
-                        <svg id="iconEye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                        <svg id="iconEyeSlash" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.978 9.978 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
-                        </svg>
-                    </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}" required 
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                           placeholder="email@perusahaan.com">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                    <div class="relative">
+                        <input type="password" name="password" id="password" required minlength="8" 
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pr-10"
+                               placeholder="Minimal 8 karakter">
+                        
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <svg id="iconEye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            <svg id="iconEyeSlash" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.978 9.978 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -92,18 +95,18 @@
                 </select>
             </div>
 
-            <!-- BAGIAN TAMBAHAN DEPARTEMEN & TANGGAL BERGABUNG -->
-            <div class="mb-5">
-                <label for="departemen" class="block text-sm font-semibold text-gray-700 mb-2">Departemen</label>
-                <input type="text" name="departemen" id="departemen" value="{{ old('departemen') }}" required 
-                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                       placeholder="Contoh: IT, HRD, Produksi, Operasional">
-            </div>
-
-            <div class="mb-8">
-                <label for="tanggal_bergabung" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Bergabung</label>
-                <input type="date" name="tanggal_bergabung" id="tanggal_bergabung" value="{{ old('tanggal_bergabung') }}" required 
-                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                <div>
+                    <label for="departemen" class="block text-sm font-semibold text-gray-700 mb-2">Departemen</label>
+                    <input type="text" name="departemen" id="departemen" value="{{ old('departemen') }}" required 
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                           placeholder="Contoh: IT, HRD, Produksi, Operasional">
+                </div>
+                <div>
+                    <label for="tanggal_bergabung" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Bergabung</label>
+                    <input type="date" name="tanggal_bergabung" id="tanggal_bergabung" value="{{ old('tanggal_bergabung') }}" required 
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-700">
+                </div>
             </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
@@ -115,6 +118,67 @@
                 </button>
             </div>
         </form>
+    </div>
+
+    <!-- TABEL DAFTAR PEGAWAI -->
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-gray-900">Daftar Pegawai Terdaftar</h2>
+                <p class="text-sm text-gray-500 mt-1">Daftar seluruh pegawai beserta hak aksesnya.</p>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200 text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                        <th class="px-4 py-3">No</th>
+                        <th class="px-4 py-3">Pegawai</th>
+                        <th class="px-4 py-3">Role</th>
+                        <th class="px-4 py-3">Departemen</th>
+                        <th class="px-4 py-3">Tgl Bergabung</th>
+                        <th class="px-4 py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm text-gray-700">
+                    @forelse($daftar_pegawai as $index => $pegawai)
+                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3">{{ $index + 1 }}</td>
+                        <td class="px-4 py-3">
+                            <div class="font-bold text-gray-900">{{ $pegawai->name }}</div>
+                            <div class="text-xs text-gray-500">{{ $pegawai->email }} ({{ $pegawai->username }})</div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold capitalize">
+                                {{ str_replace('_', ' ', $pegawai->role) }}
+                            </span>
+                        </td>
+
+                     <td class="px-4 py-3">{{ optional($pegawai->karyawan)->departemen ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ optional($pegawai->karyawan)->tanggal_bergabung ? \Carbon\Carbon::parse($pegawai->karyawan->tanggal_bergabung)->format('d M Y') : '-' }}</td>
+                        <td class="px-4 py-3 text-center">
+                            <!-- Form Hapus Pegawai -->
+                            <form action="{{ route('staffadmin.pegawai.destroy', $pegawai->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pegawai {{ $pegawai->name }}? Data tidak dapat dikembalikan.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-md font-medium transition-colors text-xs">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                            Belum ada data pegawai yang terdaftar.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>
